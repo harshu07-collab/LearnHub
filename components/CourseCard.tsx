@@ -190,20 +190,15 @@ export default function CourseCard({
                 duration: 1.2,
                 ease: [0.25, 0.1, 0.25, 1] as const,
               }}
-              className="h-full rounded-full bg-gradient-to-r from-accent via-accent-light to-purple-400 relative"
+              className="h-full rounded-full bg-gradient-to-r from-accent via-accent-light to-purple-400 relative overflow-hidden"
             >
               <motion.div
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                animate={{ x: ['-100%', '200%'] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-              />
-              {/* Glow ring at progress tip */}
-              <motion.div
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-accent-light"
-                animate={{ opacity: [0.4, 0.8, 0.4], scale: [0.8, 1.2, 0.8] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute inset-0 rounded-full"
+                animate={{ opacity: [0.4, 0.7, 0.4] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 style={{
-                  boxShadow: '0 0 8px rgba(99, 102, 241, 0.6), 0 0 20px rgba(99, 102, 241, 0.2)',
+                  background:
+                    'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)',
                 }}
               />
             </motion.div>

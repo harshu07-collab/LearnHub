@@ -231,9 +231,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
                         ease: [0.25, 0.1, 0.25, 1],
                       }}
                       className="h-full rounded-full bg-gradient-to-r from-accent via-accent-light to-purple-400 relative"
-                    >
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
-                    </motion.div>
+                    />
                   </div>
 
                   <motion.button
