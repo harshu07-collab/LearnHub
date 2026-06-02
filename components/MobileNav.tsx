@@ -1,28 +1,32 @@
 'use client';
 
-import { useState } from 'react';
-import { LayoutDashboard, BookOpen, BarChart3, Settings } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { BookOpen, BarChart3, LogOut, Home } from 'lucide-react';
+import { useAuth } from './AuthProvider';
 
 const items = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'courses', label: 'Courses', icon: BookOpen },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'settings', label: 'Settings', icon: Settings },
+  { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/' },
+  { id: 'courses', label: 'Courses', icon: BookOpen, href: '/courses' },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
 ];
 
 export default function MobileNav() {
-  const [active, setActive] = useState('dashboard');
+  const pathname = usePathname();
+  const router = useRouter();
+  const { signOut } = useAuth();
+
+  const activeItem = '/' + pathname.split('/')[1];
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-deep-1/90 backdrop-blur-xl border-t border-border-1 z-50">
       <div className="flex items-center justify-around h-full px-2">
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = active === item.id;
+          const isActive = activeItem === item.href;
           return (
             <button
               key={item.id}
-              onClick={() => setActive(item.id)}
+              onClick={() => router.push(item.href)}
               className="relative flex flex-col items-center justify-center gap-0.5 w-14 h-full transition-all duration-200"
             >
               {isActive && (
@@ -43,6 +47,14 @@ export default function MobileNav() {
             </button>
           );
         })}
+
+        <button
+          onClick={() => signOut()}
+          className="flex flex-col items-center justify-center gap-0.5 w-14 h-full"
+        >
+          <LogOut className="w-5 h-5 text-muted" />
+          <span className="text-[10px] font-medium text-muted">Sign Out</span>
+        </button>
       </div>
     </nav>
   );

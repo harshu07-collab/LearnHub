@@ -2,27 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import {
-  LayoutDashboard,
-  BookOpen,
-  BarChart3,
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-  User,
-} from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { BookOpen, BarChart3, LogOut, ChevronLeft, ChevronRight, User, Home } from 'lucide-react';
 import CursorGlow from './CursorGlow';
 import Logo from './Logo';
 import { useAuth } from './AuthProvider';
 
 const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'courses', label: 'Courses', icon: BookOpen },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/' },
+  { id: 'courses', label: 'Courses', icon: BookOpen, href: '/courses' },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
 ];
 
 export default function Sidebar() {
-  const [activeItem, setActiveItem] = useState('dashboard');
+  const pathname = usePathname();
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   const { user, signOut } = useAuth();
@@ -38,6 +32,7 @@ export default function Sidebar() {
   }, []);
 
   const resolvedCollapsed = collapsed || isTablet;
+  const activeItem = '/' + pathname.split('/')[1];
 
   return (
     <>
@@ -63,11 +58,11 @@ export default function Sidebar() {
         <div className="flex-1 flex flex-col gap-1 p-2 relative">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeItem === item.id;
+            const isActive = activeItem === item.href;
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveItem(item.id)}
+                onClick={() => router.push(item.href)}
                 className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-surface-2"
               >
                 {isActive && (
@@ -137,7 +132,7 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* Collapse Toggle — only visible on desktop (> 1024px) */}
+        {/* Collapse Toggle */}
         {!isTablet && (
           <button
             onClick={() => setCollapsed(!collapsed)}
