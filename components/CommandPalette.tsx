@@ -69,6 +69,34 @@ const courseShortcuts = [
     href: '/courses',
     category: 'Courses',
   },
+  {
+    id: 'course-5',
+    label: 'Python for Data Science',
+    icon: 'Code',
+    href: '/courses',
+    category: 'Courses',
+  },
+  {
+    id: 'course-6',
+    label: 'Cybersecurity Fundamentals',
+    icon: 'Shield',
+    href: '/courses',
+    category: 'Courses',
+  },
+  {
+    id: 'course-7',
+    label: 'Mobile App Development',
+    icon: 'Smartphone',
+    href: '/courses',
+    category: 'Courses',
+  },
+  {
+    id: 'course-8',
+    label: 'DevOps & CI/CD Pipelines',
+    icon: 'Cloud',
+    href: '/courses',
+    category: 'Courses',
+  },
 ];
 
 const fallbackIcon: Record<string, string> = {

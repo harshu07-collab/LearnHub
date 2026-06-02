@@ -13,6 +13,10 @@ export default async function CoursesPage() {
       { id: '2', title: 'System Design & Architecture', icon_name: 'Brain', progress: 52 },
       { id: '3', title: 'Cloud Architecture with AWS', icon_name: 'Cloud', progress: 88 },
       { id: '4', title: 'Web Design Mastery', icon_name: 'Palette', progress: 45 },
+      { id: '5', title: 'Python for Data Science', icon_name: 'Code', progress: 35 },
+      { id: '6', title: 'Cybersecurity Fundamentals', icon_name: 'Shield', progress: 22 },
+      { id: '7', title: 'Mobile App Development', icon_name: 'Smartphone', progress: 18 },
+      { id: '8', title: 'DevOps & CI/CD Pipelines', icon_name: 'Cloud', progress: 15 },
     ];
   }
 

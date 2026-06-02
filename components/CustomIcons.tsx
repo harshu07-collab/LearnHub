@@ -1002,6 +1002,44 @@ export function IconLeaderboard({ className = 'w-5 h-5' }: { className?: string 
   );
 }
 
+export function IconSmartphone({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
+      <rect
+        x="5"
+        y="2"
+        width="14"
+        height="20"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        fill="none"
+      />
+      <line
+        x1="10"
+        y1="18"
+        x2="14"
+        y2="18"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="10"
+        y1="5"
+        x2="14"
+        y2="5"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        opacity="0.5"
+      />
+      <circle cx="8" cy="20" r="0.8" fill="currentColor" opacity="0.4" />
+      <circle cx="16" cy="20" r="0.8" fill="currentColor" opacity="0.4" />
+    </svg>
+  );
+}
+
 // Map for easy lookup
 export const customIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code: IconCode,

@@ -20,7 +20,7 @@ export default async function Home() {
                 <h2 className="text-sm font-medium text-muted tracking-wide uppercase">
                   Active Courses
                 </h2>
-                <span className="text-xs text-subtle">4 enrolled</span>
+                <span className="text-xs text-subtle">8 enrolled</span>
               </div>
               <Suspense fallback={<CourseListSkeleton />}>
                 <CourseListServer />
