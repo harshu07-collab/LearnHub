@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './AuthProvider';
 import { usePathname, useRouter } from 'next/navigation';
+import SplashScreen from './SplashScreen';
 
 function AuthCheck({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const isLoginPage = pathname === '/login' || pathname.startsWith('/auth/');
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     if (!loading && !user && !isLoginPage) {
@@ -33,6 +35,10 @@ function AuthCheck({ children }: { children: React.ReactNode }) {
         </div>
       </div>
     );
+  }
+
+  if (user && showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
   return <>{children}</>;

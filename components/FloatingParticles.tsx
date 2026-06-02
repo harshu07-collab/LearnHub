@@ -36,7 +36,6 @@ export default function GridBackground() {
       const cy = h / 2;
       const maxDist = Math.sqrt(cx * cx + cy * cy);
 
-      ctx.strokeStyle = 'rgba(99, 102, 241, 0.08)';
       ctx.lineWidth = 0.5;
 
       for (let row = 0; row <= rows; row++) {
@@ -49,13 +48,14 @@ export default function GridBackground() {
           const dy = y - cy;
           const dist = Math.sqrt(dx * dx + dy * dy);
           const intensity = 1 - Math.min(dist / maxDist, 1);
-          const alpha = intensity * intensity * 0.06;
+          const alpha = intensity * intensity * 0.35;
           const wave = Math.sin((y + x) * 0.01 + time) * 0.15;
+
+          ctx.strokeStyle = `rgba(99, 102, 241, ${Math.max(0, alpha + wave * alpha)})`;
 
           const px = x + Math.sin(time * 0.3 + y * 0.02) * 2;
           const py = y + Math.cos(time * 0.25 + x * 0.02) * 2;
 
-          ctx.globalAlpha = Math.max(0, alpha + wave * alpha);
           if (col === 0) ctx.moveTo(px, py);
           else ctx.lineTo(px, py);
         }
@@ -72,20 +72,19 @@ export default function GridBackground() {
           const dy = y - cy;
           const dist = Math.sqrt(dx * dx + dy * dy);
           const intensity = 1 - Math.min(dist / maxDist, 1);
-          const alpha = intensity * intensity * 0.06;
+          const alpha = intensity * intensity * 0.35;
           const wave = Math.sin((x + y) * 0.01 + time) * 0.15;
+
+          ctx.strokeStyle = `rgba(99, 102, 241, ${Math.max(0, alpha + wave * alpha)})`;
 
           const px = x + Math.sin(time * 0.3 + y * 0.02) * 2;
           const py = y + Math.cos(time * 0.25 + x * 0.02) * 2;
 
-          ctx.globalAlpha = Math.max(0, alpha + wave * alpha);
           if (row === 0) ctx.moveTo(px, py);
           else ctx.lineTo(px, py);
         }
         ctx.stroke();
       }
-
-      ctx.globalAlpha = 1;
 
       animId = requestAnimationFrame(draw);
     };
