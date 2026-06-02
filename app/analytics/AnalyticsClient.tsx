@@ -1,116 +1,124 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 import {
-  Trophy,
-  Flame,
-  Clock,
-  Target,
-  TrendingUp,
-  Award,
-  Zap,
-  BookOpen,
-  Brain,
-  Code,
-  Cloud,
-  Palette,
-  Star,
-} from 'lucide-react';
+  IconBookOpen,
+  IconFlame,
+  IconTrendingUp,
+  IconClock,
+  IconTrophy,
+  IconTarget,
+  IconAward,
+  IconZap,
+  IconBrain,
+  IconCode,
+  IconCloud,
+  IconPalette,
+  IconStar,
+  IconBarChart,
+} from '@/components/CustomIcons';
 import GrainOverlay from '@/components/GrainOverlay';
 
 const statCards = [
   {
     label: 'Total Courses',
     value: '4',
-    icon: BookOpen,
+    icon: IconBookOpen,
     color: 'text-accent-light',
     bg: 'bg-accent/10',
   },
   {
     label: 'Day Streak',
     value: '7',
-    icon: Flame,
+    icon: IconFlame,
     color: 'text-orange-400',
     bg: 'bg-orange-500/10',
   },
   {
     label: 'Avg Progress',
     value: '65%',
-    icon: TrendingUp,
+    icon: IconTrendingUp,
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/10',
   },
   {
     label: 'Hours Learned',
     value: '28',
-    icon: Clock,
+    icon: IconClock,
     color: 'text-purple-400',
     bg: 'bg-purple-500/10',
   },
   {
     label: 'Achievements',
     value: '5',
-    icon: Trophy,
+    icon: IconTrophy,
     color: 'text-amber-400',
     bg: 'bg-amber-500/10',
   },
-  { label: 'Focus Score', value: '82', icon: Target, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+  {
+    label: 'Focus Score',
+    value: '82',
+    icon: IconTarget,
+    color: 'text-cyan-400',
+    bg: 'bg-cyan-500/10',
+  },
 ];
 
 const achievements = [
   {
     name: 'Quick Starter',
     desc: 'Complete first lesson',
-    icon: Zap,
+    icon: IconZap,
     progress: 100,
     color: 'text-amber-400',
   },
   {
     name: 'Code Master',
     desc: 'Finish React course',
-    icon: Code,
+    icon: IconCode,
     progress: 75,
     color: 'text-accent-light',
   },
   {
     name: 'AI Explorer',
     desc: 'Complete ML module',
-    icon: Brain,
+    icon: IconBrain,
     progress: 52,
     color: 'text-purple-400',
   },
   {
     name: 'Cloud Champ',
     desc: 'Deploy first app',
-    icon: Cloud,
+    icon: IconCloud,
     progress: 88,
     color: 'text-sky-400',
   },
   {
     name: 'Design Guru',
     desc: 'Master UI principles',
-    icon: Palette,
+    icon: IconPalette,
     progress: 45,
     color: 'text-pink-400',
   },
   {
     name: 'Streak King',
     desc: '7-day streak',
-    icon: Flame,
+    icon: IconFlame,
     progress: 100,
     color: 'text-orange-400',
   },
   {
     name: 'Night Owl',
     desc: 'Study after 10 PM',
-    icon: Star,
+    icon: IconStar,
     progress: 30,
     color: 'text-indigo-400',
   },
   {
     name: 'Bookworm',
     desc: 'Read 10 articles',
-    icon: BookOpen,
+    icon: IconBookOpen,
     progress: 60,
     color: 'text-emerald-400',
   },
@@ -128,195 +136,345 @@ const weeklyData = [
 const maxHours = Math.max(...weeklyData.map((d) => d.hours));
 
 const categoryData = [
-  { label: 'Frontend', value: 35, color: 'bg-accent' },
-  { label: 'AI/ML', value: 25, color: 'bg-purple-500' },
-  { label: 'Cloud', value: 25, color: 'bg-sky-500' },
-  { label: 'Design', value: 15, color: 'bg-pink-500' },
+  { label: 'Frontend', value: 35, color: 'text-accent', bg: 'bg-accent' },
+  { label: 'AI/ML', value: 25, color: 'text-purple-400', bg: 'bg-purple-500' },
+  { label: 'Cloud', value: 25, color: 'text-sky-400', bg: 'bg-sky-500' },
+  { label: 'Design', value: 15, color: 'text-pink-400', bg: 'bg-pink-500' },
 ];
+
+function StatCard({ stat, idx }: { stat: (typeof statCards)[0]; idx: number }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [glow, setGlow] = useState({ x: 50, y: 50 });
+
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setRotate({
+      x: (y - rect.height / 2) / 20,
+      y: (rect.width / 2 - x) / 20,
+    });
+    setGlow({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 });
+  };
+
+  const handleLeave = () => {
+    setRotate({ x: 0, y: 0 });
+    setGlow({ x: 50, y: 50 });
+  };
+
+  const Icon = stat.icon;
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleLeave}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.05 * idx, duration: 0.4 }}
+      className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-4 overflow-hidden group cursor-default"
+      style={{
+        transform: `perspective(600px) rotateX(${rotate.x}px) rotateY(${rotate.y}px)`,
+        transformStyle: 'preserve-3d',
+      }}
+    >
+      <GrainOverlay opacity={0.03} />
+      <motion.div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle at ${glow.x}% ${glow.y}%, rgba(99,102,241,0.08) 0%, transparent 60%)`,
+        }}
+      />
+      <div className="relative z-10" style={{ transform: 'translateZ(20px)' }}>
+        <div
+          className={`w-8 h-8 rounded-lg ${stat.bg} border border-border-1 flex items-center justify-center mb-2.5`}
+        >
+          <Icon className={`w-4 h-4 ${stat.color}`} />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
+          className="text-xl font-bold text-soft-white"
+        >
+          {stat.value}
+        </motion.div>
+        <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
+      </div>
+    </motion.div>
+  );
+}
+
+function RadialChart({ size = 160 }: { size?: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-50px' });
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = size * 0.35;
+
+  return (
+    <svg ref={ref} width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {categoryData.map((cat, idx) => {
+        const total = categoryData.reduce((s, c) => s + c.value, 0);
+        const offset = categoryData.slice(0, idx).reduce((s, c) => s + c.value, 0);
+        const pct = cat.value / total;
+        const angle = (offset / total) * 360;
+        const endAngle = ((offset + cat.value) / total) * 360;
+
+        const startRad = ((angle - 90) * Math.PI) / 180;
+        const endRad = ((endAngle - 90) * Math.PI) / 180;
+
+        const x1 = cx + r * Math.cos(startRad);
+        const y1 = cy + r * Math.sin(startRad);
+        const x2 = cx + r * Math.cos(endRad);
+        const y2 = cy + r * Math.sin(endRad);
+
+        const largeArc = pct > 0.5 ? 1 : 0;
+
+        return (
+          <motion.path
+            key={cat.label}
+            d={`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`}
+            fill="none"
+            className={cat.bg.replace('bg-', 'fill-')}
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ delay: idx * 0.15, duration: 0.5 }}
+            style={{ fill: `var(--color-${cat.bg.replace('bg-', '')})` }}
+          />
+        );
+      })}
+      <circle cx={cx} cy={cy} r={r * 0.6} fill="var(--color-surface-1)" />
+      <motion.text
+        x={cx}
+        y={cy - 4}
+        textAnchor="middle"
+        className="text-soft-white text-lg font-bold"
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.5 }}
+      >
+        100%
+      </motion.text>
+      <motion.text
+        x={cx}
+        y={cy + 12}
+        textAnchor="middle"
+        className="text-muted text-[9px]"
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.5 }}
+      >
+        Total
+      </motion.text>
+    </svg>
+  );
+}
+
+function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: number }) {
+  const [hovered, setHovered] = useState(false);
+  const unlocked = ach.progress >= 100;
+  const Icon = ach.icon;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 0.35 + idx * 0.04, duration: 0.3 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`relative rounded-xl p-4 border text-center transition-all duration-300 cursor-default ${
+        unlocked
+          ? 'bg-gradient-to-br from-amber-500/5 to-orange-500/5 border-amber-500/20'
+          : 'bg-surface-2 border-border-1 opacity-50'
+      } ${hovered ? 'scale-[1.03]' : ''}`}
+      style={{ transformStyle: 'preserve-3d' }}
+    >
+      {unlocked && hovered && (
+        <motion.div
+          className="absolute inset-0 rounded-xl pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          style={{
+            boxShadow: '0 0 40px rgba(251, 191, 36, 0.12), inset 0 0 40px rgba(251, 191, 36, 0.04)',
+          }}
+        />
+      )}
+      <div
+        className={`w-10 h-10 rounded-xl mx-auto mb-2.5 flex items-center justify-center ${unlocked ? 'bg-amber-500/10' : 'bg-surface-3'}`}
+      >
+        <Icon className={`w-5 h-5 ${unlocked ? ach.color : 'text-muted'}`} />
+      </div>
+      <h4 className={`text-xs font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}>
+        {ach.name}
+      </h4>
+      <p className="text-[9px] text-subtle mt-0.5">{ach.desc}</p>
+      {!unlocked && (
+        <div className="mt-2 h-1 bg-surface-3 rounded-full overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${ach.progress}%` }}
+            transition={{ delay: 0.3 + idx * 0.04, duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="h-full rounded-full bg-accent/50"
+          />
+        </div>
+      )}
+      {unlocked && (
+        <motion.span
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-[9px] text-amber-400 font-medium mt-1.5 block"
+        >
+          Unlocked
+        </motion.span>
+      )}
+    </motion.div>
+  );
+}
 
 export default function AnalyticsClient() {
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Analytics</h1>
-        <p className="text-sm text-muted mt-1">Your learning journey at a glance</p>
-      </motion.div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        {statCards.map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * idx, duration: 0.4 }}
-              className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-4 overflow-hidden group"
-            >
-              <GrainOverlay opacity={0.03} />
-              <div className="relative z-10">
-                <div
-                  className={`w-8 h-8 rounded-lg ${stat.bg} border border-border-1 flex items-center justify-center mb-2.5`}
-                >
-                  <Icon className={`w-4 h-4 ${stat.color}`} />
-                </div>
-                <div className="text-xl font-bold text-soft-white">{stat.value}</div>
-                <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Weekly Hours Chart */}
+    <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
+      <div className="max-w-7xl mx-auto space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+          transition={{ duration: 0.5 }}
         >
-          <GrainOverlay opacity={0.03} />
-          <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-accent-light" />
-            Weekly Study Time
-          </h3>
-          <div className="flex items-end justify-between gap-2 h-40">
-            {weeklyData.map((d, idx) => {
-              const h = (d.hours / maxHours) * 100;
-              return (
-                <div
-                  key={d.day}
-                  className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
-                >
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 + idx * 0.05 }}
-                    className="text-[10px] text-accent-light font-medium"
-                  >
-                    {d.hours}h
-                  </motion.span>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: `${h}%` }}
-                    transition={{
-                      delay: 0.3 + idx * 0.05,
-                      duration: 0.8,
-                      ease: [0.25, 0.1, 0.25, 1],
-                    }}
-                    className="w-full rounded-t-md bg-gradient-to-t from-accent to-accent-light relative"
-                    style={{ minHeight: 4 }}
-                  >
-                    <div className="absolute inset-0 rounded-t-md bg-gradient-to-t from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </motion.div>
-                  <span className="text-[10px] text-subtle font-medium">{d.day}</span>
-                </div>
-              );
-            })}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
+              <IconBarChart className="w-5 h-5 text-accent-light" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Analytics</h1>
+              <p className="text-sm text-muted mt-1">Your learning journey at a glance</p>
+            </div>
           </div>
         </motion.div>
 
-        {/* Category Distribution */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {statCards.map((stat, idx) => (
+            <StatCard key={stat.label} stat={stat} idx={idx} />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden group"
+          >
+            <GrainOverlay opacity={0.03} />
+            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
+              <IconClock className="w-4 h-4 text-accent-light" />
+              Weekly Study Time
+            </h3>
+            <div className="flex items-end justify-between gap-2 h-40">
+              {weeklyData.map((d, idx) => {
+                const h = (d.hours / maxHours) * 100;
+                return (
+                  <div
+                    key={d.day}
+                    className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
+                  >
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 + idx * 0.05 }}
+                      className="text-[10px] text-accent-light font-medium"
+                    >
+                      {d.hours}h
+                    </motion.span>
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: `${h}%` }}
+                      transition={{
+                        delay: 0.3 + idx * 0.05,
+                        duration: 0.8,
+                        ease: [0.25, 0.1, 0.25, 1],
+                      }}
+                      className="w-full rounded-t-md bg-gradient-to-t from-accent to-accent-light relative cursor-pointer"
+                      style={{ minHeight: 4 }}
+                      whileHover={{ scale: 1.08, transformOrigin: 'bottom' }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 rounded-t-md bg-gradient-to-t from-transparent via-white/15 to-transparent"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                      />
+                    </motion.div>
+                    <span className="text-[10px] text-subtle font-medium">{d.day}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.5 }}
+            className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+          >
+            <GrainOverlay opacity={0.03} />
+            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
+              <IconTarget className="w-4 h-4 text-accent-light" />
+              Learning Distribution
+            </h3>
+            <div className="flex items-center justify-center mb-6">
+              <RadialChart size={180} />
+            </div>
+            <div className="space-y-3">
+              {categoryData.map((cat, idx) => (
+                <div key={cat.label}>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${cat.bg}`} />
+                      <span className="text-xs text-muted">{cat.label}</span>
+                    </div>
+                    <span className="text-xs font-semibold text-soft-white">{cat.value}%</span>
+                  </div>
+                  <div className="h-1.5 bg-surface-3 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${cat.value}%` }}
+                      transition={{
+                        delay: 0.3 + idx * 0.1,
+                        duration: 1,
+                        ease: [0.25, 0.1, 0.25, 1],
+                      }}
+                      className={`h-full rounded-full ${cat.bg} relative`}
+                    >
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                    </motion.div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.5 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
           className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
         >
           <GrainOverlay opacity={0.03} />
           <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-            <Target className="w-4 h-4 text-accent-light" />
-            Learning Distribution
+            <IconAward className="w-4 h-4 text-amber-400" />
+            Achievements
           </h3>
-          <div className="space-y-4">
-            {categoryData.map((cat, idx) => (
-              <div key={cat.label}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs text-muted">{cat.label}</span>
-                  <span className="text-xs font-semibold text-soft-white">{cat.value}%</span>
-                </div>
-                <div className="h-2 bg-surface-3 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${cat.value}%` }}
-                    transition={{ delay: 0.3 + idx * 0.1, duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
-                    className={`h-full rounded-full ${cat.color} relative`}
-                  >
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                  </motion.div>
-                </div>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {achievements.map((ach, idx) => (
+              <AchievementCard key={ach.name} ach={ach} idx={idx} />
             ))}
           </div>
         </motion.div>
       </div>
-
-      {/* Achievements */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.5 }}
-        className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
-      >
-        <GrainOverlay opacity={0.03} />
-        <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-          <Award className="w-4 h-4 text-amber-400" />
-          Achievements
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {achievements.map((ach, idx) => {
-            const Icon = ach.icon;
-            const unlocked = ach.progress >= 100;
-            return (
-              <motion.div
-                key={ach.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.35 + idx * 0.04, duration: 0.3 }}
-                className={`relative rounded-xl p-4 border text-center transition-all ${
-                  unlocked
-                    ? 'bg-gradient-to-br from-amber-500/5 to-orange-500/5 border-amber-500/20'
-                    : 'bg-surface-2 border-border-1 opacity-50'
-                }`}
-              >
-                <div
-                  className={`w-10 h-10 rounded-xl mx-auto mb-2.5 flex items-center justify-center ${
-                    unlocked ? 'bg-amber-500/10' : 'bg-surface-3'
-                  }`}
-                >
-                  <Icon className={`w-5 h-5 ${unlocked ? ach.color : 'text-muted'}`} />
-                </div>
-                <h4
-                  className={`text-xs font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
-                >
-                  {ach.name}
-                </h4>
-                <p className="text-[9px] text-subtle mt-0.5">{ach.desc}</p>
-                {!unlocked && (
-                  <div className="mt-2 h-1 bg-surface-3 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-accent/50 transition-all"
-                      style={{ width: `${ach.progress}%` }}
-                    />
-                  </div>
-                )}
-                {unlocked && (
-                  <span className="text-[9px] text-amber-400 font-medium mt-1.5 block">
-                    Unlocked
-                  </span>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      </motion.div>
     </div>
   );
 }

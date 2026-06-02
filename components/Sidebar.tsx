@@ -11,6 +11,8 @@ import {
   IconChevronRight,
   IconUser,
   IconHome,
+  IconAward,
+  IconLeaderboard,
 } from './CustomIcons';
 import CursorGlow from './CursorGlow';
 import Logo from './Logo';
@@ -20,6 +22,8 @@ const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: IconHome, href: '/' },
   { id: 'courses', label: 'Courses', icon: IconBookOpen, href: '/courses' },
   { id: 'analytics', label: 'Analytics', icon: IconBarChart, href: '/analytics' },
+  { id: 'achievements', label: 'Achievements', icon: IconAward, href: '/achievements' },
+  { id: 'leaderboard', label: 'Leaderboard', icon: IconLeaderboard, href: '/leaderboard' },
 ];
 
 export default function Sidebar() {

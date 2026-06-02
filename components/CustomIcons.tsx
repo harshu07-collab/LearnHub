@@ -955,6 +955,53 @@ export function IconCommand({ className = 'w-5 h-5' }: { className?: string }) {
   );
 }
 
+export function IconLeaderboard({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
+      <rect
+        x="3"
+        y="11"
+        width="4"
+        height="10"
+        rx="1"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        fill="none"
+      />
+      <rect
+        x="10"
+        y="7"
+        width="4"
+        height="14"
+        rx="1"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        fill="none"
+      />
+      <rect
+        x="17"
+        y="3"
+        width="4"
+        height="18"
+        rx="1"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        fill="none"
+      />
+      <path
+        d="M17 3L19 5.5L21 3"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <circle cx="12" cy="7" r="1.5" fill="currentColor" opacity="0.4" />
+      <circle cx="3" cy="13" r="1.5" fill="currentColor" opacity="0.4" />
+    </svg>
+  );
+}
+
 // Map for easy lookup
 export const customIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code: IconCode,
@@ -993,4 +1040,5 @@ export const customIconMap: Record<string, React.ComponentType<{ className?: str
   Trash2: IconTrash,
   Save: IconSave,
   Command: IconCommand,
+  Leaderboard: IconLeaderboard,
 };

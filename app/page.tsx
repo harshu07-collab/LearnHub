@@ -3,6 +3,7 @@ import BentoGrid, { GridItem } from '@/components/BentoGrid';
 import HeroTile from '@/components/HeroTile';
 import CourseListServer from '@/components/CourseListServer';
 import ActivityTile from '@/components/ActivityTile';
+import AchievementsTile from '@/components/AchievementsTile';
 import { CourseListSkeleton, ActivityTileSkeleton } from '@/components/Loading';
 
 export default async function Home() {
@@ -30,6 +31,9 @@ export default async function Home() {
             <Suspense fallback={<ActivityTileSkeleton />}>
               <ActivityTile />
             </Suspense>
+          </GridItem>
+          <GridItem cols={4}>
+            <AchievementsTile />
           </GridItem>
         </BentoGrid>
       </div>

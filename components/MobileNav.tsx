@@ -1,13 +1,23 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { IconBookOpen, IconBarChart, IconLogOut, IconHome, IconSettings } from './CustomIcons';
+import {
+  IconBookOpen,
+  IconBarChart,
+  IconLogOut,
+  IconHome,
+  IconSettings,
+  IconAward,
+  IconLeaderboard,
+} from './CustomIcons';
 import { useAuth } from './AuthProvider';
 
 const items = [
   { id: 'dashboard', label: 'Dashboard', icon: IconHome, href: '/' },
   { id: 'courses', label: 'Courses', icon: IconBookOpen, href: '/courses' },
   { id: 'analytics', label: 'Analytics', icon: IconBarChart, href: '/analytics' },
+  { id: 'achievements', label: 'Awards', icon: IconAward, href: '/achievements' },
+  { id: 'leaderboard', label: 'Top', icon: IconLeaderboard, href: '/leaderboard' },
   { id: 'settings', label: 'Settings', icon: IconSettings, href: '/settings' },
 ];
 
