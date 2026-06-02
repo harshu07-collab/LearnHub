@@ -25,6 +25,11 @@ const iconDefaults: Record<string, { icon_name: string; progress: number }> = {
   network: { icon_name: 'Network', progress: 30 },
 };
 
+const titleRemap: Record<string, string> = {
+  'Intro to AI': 'System Design & Architecture',
+  'Advanced React': 'TypeScript Mastery',
+};
+
 function deriveCourseDefaults(title: string) {
   const lower = title.toLowerCase();
   for (const [keyword, vals] of Object.entries(iconDefaults)) {
@@ -39,15 +44,21 @@ export async function fetchCourses() {
     .select('id, title, icon_name, progress')
     .order('created_at', { ascending: true });
   if (error) throw error;
-  return (data || []).map(
-    (row: { id: string; title: string; icon_name?: string | null; progress?: number | null }) => {
-      const derived = deriveCourseDefaults(row.title);
-      return {
-        id: row.id,
-        title: row.title,
-        icon_name: row.icon_name || derived.icon_name,
-        progress: row.progress ?? derived.progress,
-      };
-    },
-  ) as Course[];
+
+  // Deduplicate by title and remap old names
+  const seen = new Set<string>();
+  const courses: Course[] = [];
+  for (const row of data || []) {
+    const title = titleRemap[row.title] || row.title;
+    if (seen.has(title)) continue;
+    seen.add(title);
+    const derived = deriveCourseDefaults(row.title);
+    courses.push({
+      id: row.id,
+      title,
+      icon_name: row.icon_name || derived.icon_name,
+      progress: row.progress ?? derived.progress,
+    });
+  }
+  return courses;
 }
