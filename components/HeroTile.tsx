@@ -8,15 +8,6 @@ import GrainOverlay from './GrainOverlay';
 import TypewriterText from './TypewriterText';
 import AnimatedCounter from './AnimatedCounter';
 
-interface Sparkle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  life: number;
-  maxLife: number;
-  size: number;
-}
 interface HeroTileProps {
   userName?: string;
 }
@@ -34,7 +25,6 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
 
     let animationId: number;
     let t = 0;
-    const sparkles: Sparkle[] = [];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth;
@@ -84,31 +74,6 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
       sweepGradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
       ctx.fillStyle = sweepGradient;
       ctx.fillRect(0, 0, w, h);
-
-      // Sparkle particles
-      if (Math.random() < 0.15) {
-        sparkles.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: -Math.random() * 0.6 - 0.2,
-          life: 0,
-          maxLife: 60 + Math.random() * 60,
-          size: 1 + Math.random() * 1.5,
-        });
-      }
-      for (let i = sparkles.length - 1; i >= 0; i--) {
-        const s = sparkles[i];
-        s.x += s.vx;
-        s.y += s.vy;
-        s.life++;
-        const alpha = Math.max(0, 1 - s.life / s.maxLife) * 0.6;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size * (1 - (s.life / s.maxLife) * 0.5), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(196, 181, 253, ${alpha})`;
-        ctx.fill();
-        if (s.life >= s.maxLife) sparkles.splice(i, 1);
-      }
 
       animationId = requestAnimationFrame(draw);
     };
