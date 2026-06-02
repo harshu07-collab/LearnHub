@@ -24,6 +24,7 @@ const navItems = [
   { id: 'analytics', label: 'Analytics', icon: IconBarChart, href: '/analytics' },
   { id: 'achievements', label: 'Achievements', icon: IconAward, href: '/achievements' },
   { id: 'leaderboard', label: 'Leaderboard', icon: IconLeaderboard, href: '/leaderboard' },
+  { id: 'profile', label: 'Profile', icon: IconUser, href: '/profile' },
 ];
 
 const containerVariants = {

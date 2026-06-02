@@ -6,6 +6,7 @@ import { motion, useInView } from 'framer-motion';
 interface AnimatedCounterProps {
   from?: number;
   to: number;
+  prefix?: string;
   suffix?: string;
   className?: string;
   duration?: number;
@@ -14,6 +15,7 @@ interface AnimatedCounterProps {
 export default function AnimatedCounter({
   from = 0,
   to,
+  prefix = '',
   suffix = '',
   className = '',
   duration = 1.5,
@@ -48,6 +50,7 @@ export default function AnimatedCounter({
       transition={{ duration: 0.4 }}
       className={className}
     >
+      {prefix}
       {display}
       {suffix}
     </motion.span>

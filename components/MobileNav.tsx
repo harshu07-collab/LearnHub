@@ -10,6 +10,7 @@ import {
   IconSettings,
   IconAward,
   IconLeaderboard,
+  IconUser,
 } from './CustomIcons';
 import { useAuth } from './AuthProvider';
 
@@ -19,6 +20,7 @@ const items = [
   { id: 'analytics', label: 'Analytics', icon: IconBarChart, href: '/analytics' },
   { id: 'achievements', label: 'Awards', icon: IconAward, href: '/achievements' },
   { id: 'leaderboard', label: 'Top', icon: IconLeaderboard, href: '/leaderboard' },
+  { id: 'profile', label: 'Profile', icon: IconUser, href: '/profile' },
   { id: 'settings', label: 'Settings', icon: IconSettings, href: '/settings' },
 ];
 
