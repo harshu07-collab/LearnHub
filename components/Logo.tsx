@@ -21,106 +21,71 @@ export default function Logo({ size = 28, showText = true }: LogoProps) {
         {/* Background rounded rect */}
         <rect x="0.5" y="0.5" width="31" height="31" rx="7" fill="url(#lg-bg)" />
 
-        {/* Left page — sweeping curve */}
-        <path d="M6 22V10C6 8.9 6.9 8 8 8H11V22H6Z" fill="rgba(255,255,255,0.9)" />
-        {/* Left page spine fold */}
+        {/* Orbiting ring — outer */}
+        <circle
+          cx="16"
+          cy="16"
+          r="10"
+          fill="none"
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="0.5"
+        />
+        {/* Orbiting ring — inner */}
+        <circle
+          cx="16"
+          cy="16"
+          r="7"
+          fill="none"
+          stroke="rgba(255,255,255,0.12)"
+          strokeWidth="0.6"
+        />
+
+        {/* Orbital arcs (3 arcs around the hub) */}
+        {/* Top arc */}
         <path
-          d="M6 22V10C6 8.9 6.9 8 8 8H11"
-          stroke="rgba(255,255,255,0.3)"
+          d="M10.5 10C12.5 8 19.5 8 21.5 10"
+          stroke="rgba(255,255,255,0.2)"
+          strokeWidth="0.6"
+          fill="none"
+          strokeLinecap="round"
+        />
+        {/* Bottom arc */}
+        <path
+          d="M10.5 22C12.5 24 19.5 24 21.5 22"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="0.6"
+          fill="none"
+          strokeLinecap="round"
+        />
+        {/* Diagonal arc */}
+        <path
+          d="M11 19.5C12 22 20 22 21 19.5"
+          stroke="rgba(255,255,255,0.1)"
           strokeWidth="0.5"
           fill="none"
-        />
-        {/* Left page inner highlight */}
-        <path
-          d="M9 10V20"
-          stroke="rgba(255,255,255,0.15)"
-          strokeWidth="0.5"
-          strokeLinecap="round"
-        />
-        {/* Left page text lines */}
-        <line
-          x1="7.5"
-          y1="13"
-          x2="10"
-          y2="13"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="0.4"
-          strokeLinecap="round"
-        />
-        <line
-          x1="7.5"
-          y1="15"
-          x2="9.5"
-          y2="15"
-          stroke="rgba(255,255,255,0.15)"
-          strokeWidth="0.4"
-          strokeLinecap="round"
-        />
-        <line
-          x1="7.5"
-          y1="17"
-          x2="10"
-          y2="17"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="0.4"
           strokeLinecap="round"
         />
 
-        {/* Right page — sweeping curve */}
-        <path d="M21 22V10C21 8.9 20.1 8 19 8H16V22H21Z" fill="rgba(255,255,255,0.85)" />
-        {/* Right page spine fold */}
-        <path
-          d="M21 22V10C21 8.9 20.1 8 19 8H16"
-          stroke="rgba(255,255,255,0.3)"
-          strokeWidth="0.5"
-          fill="none"
-        />
-        {/* Right page inner highlight */}
-        <path
-          d="M18 10V20"
-          stroke="rgba(255,255,255,0.15)"
-          strokeWidth="0.5"
-          strokeLinecap="round"
-        />
-        {/* Right page text lines */}
-        <line
-          x1="17"
-          y1="13"
-          x2="19.5"
-          y2="13"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="0.4"
-          strokeLinecap="round"
-        />
-        <line
-          x1="17"
-          y1="15"
-          x2="19"
-          y2="15"
-          stroke="rgba(255,255,255,0.15)"
-          strokeWidth="0.4"
-          strokeLinecap="round"
-        />
-        <line
-          x1="17"
-          y1="17"
-          x2="19.5"
-          y2="17"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="0.4"
-          strokeLinecap="round"
-        />
+        {/* Orbiting particles — 4 dots on the outer ring */}
+        <circle cx="16" cy="6" r="1.2" fill="rgba(255,255,255,0.25)" />
+        <circle cx="16" cy="26" r="1.2" fill="rgba(255,255,255,0.15)" />
+        <circle cx="6" cy="16" r="1.2" fill="rgba(255,255,255,0.2)" />
+        <circle cx="26" cy="16" r="1.2" fill="rgba(255,255,255,0.2)" />
 
-        {/* Spine center */}
-        <rect x="11" y="8" width="2" height="14" rx="0.6" fill="rgba(255,255,255,0.65)" />
-        {/* Spine highlight */}
-        <rect x="11.5" y="9" width="0.4" height="12" rx="0.2" fill="rgba(255,255,255,0.25)" />
+        {/* Orbiting particles — 4 smaller dots on inner ring */}
+        <circle cx="23" cy="12" r="0.8" fill="rgba(255,255,255,0.12)" />
+        <circle cx="9" cy="20" r="0.8" fill="rgba(255,255,255,0.12)" />
+        <circle cx="20" cy="23" r="0.8" fill="rgba(255,255,255,0.08)" />
+        <circle cx="12" cy="9" r="0.8" fill="rgba(255,255,255,0.08)" />
 
-        {/* Top accent dot */}
-        <circle cx="14.5" cy="6" r="1.2" fill="rgba(255,255,255,0.2)" />
-
-        {/* Bottom accent bar */}
-        <rect x="12" y="24" width="5" height="1.5" rx="0.75" fill="rgba(255,255,255,0.15)" />
+        {/* Central hub — outer glow */}
+        <circle cx="16" cy="16" r="4" fill="rgba(255,255,255,0.08)" />
+        {/* Central hub — main glow */}
+        <circle cx="16" cy="16" r="2.8" fill="rgba(255,255,255,0.15)" />
+        {/* Central hub — core */}
+        <circle cx="16" cy="16" r="1.5" fill="white" />
+        {/* Central hub — inner bright core */}
+        <circle cx="16" cy="16" r="0.6" fill="rgba(99,102,241,0.5)" />
 
         <defs>
           <linearGradient id="lg-bg" x1="0" y1="0" x2="32" y2="32">
