@@ -182,8 +182,8 @@ export default function AchievementsPageClient() {
               <IconAward className="w-5 h-5 text-amber-400" />
             </motion.div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Achievements</h1>
-              <p className="text-sm text-muted mt-1">Your learning milestones and badges</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Achievements</h1>
+              <p className="text-base text-muted mt-1">Your learning milestones and badges</p>
             </div>
           </div>
         </motion.div>
@@ -210,10 +210,10 @@ export default function AchievementsPageClient() {
               >
                 <IconTrophy className={`w-[18px] h-[18px] ${stat.color}`} />
               </motion.div>
-              <div className="text-2xl font-bold text-soft-white">
+              <div className="text-3xl font-bold text-soft-white">
                 <AnimatedCounter to={stat.value} duration={1.2} />
               </div>
-              <div className="text-xs text-muted mt-0.5">{stat.label}</div>
+              <div className="text-base text-muted mt-0.5">{stat.label}</div>
             </motion.div>
           ))}
         </div>
@@ -324,11 +324,11 @@ export default function AchievementsPageClient() {
                     </motion.div>
 
                     <h4
-                      className={`text-sm font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
+                      className={`text-base font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
                     >
                       {ach.name}
                     </h4>
-                    <p className="text-[10px] text-subtle mt-0.5">{ach.desc}</p>
+                    <p className="text-base text-subtle mt-0.5">{ach.desc}</p>
 
                     {!unlocked && (
                       <div className="mt-2 h-1 bg-surface-3 rounded-full overflow-hidden">
@@ -349,7 +349,7 @@ export default function AchievementsPageClient() {
                       <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: isHovered ? 1.1 : 1 }}
-                        className="text-[10px] text-amber-400 font-semibold mt-2 block"
+                        className="text-base text-amber-400 font-semibold mt-2 block"
                       >
                         Unlocked
                       </motion.span>

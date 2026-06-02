@@ -49,8 +49,8 @@ export default function SettingsClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Settings</h1>
-        <p className="text-sm text-muted mt-1">Manage your account and preferences</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Settings</h1>
+        <p className="text-base text-muted mt-1">Manage your account and preferences</p>
       </motion.div>
 
       <div className="flex flex-col md:flex-row gap-6">
@@ -102,7 +102,7 @@ export default function SettingsClient() {
                 </h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-muted mb-1.5">
+                    <label className="block text-sm font-medium text-muted mb-1.5">
                       Display Name
                     </label>
                     <input
@@ -113,14 +113,14 @@ export default function SettingsClient() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-muted mb-1.5">Email</label>
+                    <label className="block text-sm font-medium text-muted mb-1.5">Email</label>
                     <input
                       type="email"
                       value={user?.email || ''}
                       disabled
                       className="w-full bg-surface-2/50 border border-border-1 rounded-lg px-3 py-2.5 text-sm text-muted cursor-not-allowed"
                     />
-                    <p className="text-[10px] text-subtle mt-1">Email cannot be changed</p>
+                    <p className="text-base text-subtle mt-1">Email cannot be changed</p>
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.01 }}
@@ -143,7 +143,7 @@ export default function SettingsClient() {
                 </h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-muted mb-2">Theme</label>
+                    <label className="block text-sm font-medium text-muted mb-2">Theme</label>
                     <div className="flex gap-2">
                       {[
                         { id: 'dark', label: 'Dark', icon: Moon },
@@ -163,12 +163,12 @@ export default function SettingsClient() {
                             }`}
                           >
                             <Icon className="w-5 h-5" />
-                            <span className="text-xs font-medium">{t.label}</span>
+                            <span className="text-sm font-medium">{t.label}</span>
                           </button>
                         );
                       })}
                     </div>
-                    <p className="text-[10px] text-subtle mt-1.5">
+                    <p className="text-base text-subtle mt-1.5">
                       Dark mode is the only theme available
                     </p>
                   </div>
@@ -202,8 +202,8 @@ export default function SettingsClient() {
                       className="flex items-center justify-between p-3 rounded-lg bg-surface-2/50 border border-border-1 cursor-pointer hover:bg-surface-2 transition-colors"
                     >
                       <div>
-                        <p className="text-sm font-medium text-soft-white">{n.label}</p>
-                        <p className="text-[10px] text-subtle">{n.desc}</p>
+                        <p className="text-base font-medium text-soft-white">{n.label}</p>
+                        <p className="text-base text-subtle">{n.desc}</p>
                       </div>
                       <div className="relative w-9 h-5 rounded-full bg-accent/30 border border-accent/20 cursor-pointer">
                         <div className="absolute right-0.5 top-0.5 w-4 h-4 rounded-full bg-accent-light shadow-sm" />
@@ -231,8 +231,8 @@ export default function SettingsClient() {
                       className="flex items-center justify-between p-3 rounded-lg bg-surface-2/50 border border-border-1 cursor-pointer hover:bg-surface-2 transition-colors"
                     >
                       <div>
-                        <p className="text-sm font-medium text-soft-white">{a.label}</p>
-                        <p className="text-[10px] text-subtle">{a.desc}</p>
+                        <p className="text-base font-medium text-soft-white">{a.label}</p>
+                        <p className="text-base text-subtle">{a.desc}</p>
                       </div>
                       <div className="w-9 h-5 rounded-full bg-surface-3 border border-border-1 cursor-pointer" />
                     </label>
@@ -249,8 +249,10 @@ export default function SettingsClient() {
                 </h2>
                 <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 space-y-4">
                   <div>
-                    <p className="text-sm font-medium text-soft-white">Sign out of your account</p>
-                    <p className="text-xs text-muted mt-0.5">You can sign back in anytime</p>
+                    <p className="text-base font-medium text-soft-white">
+                      Sign out of your account
+                    </p>
+                    <p className="text-base text-muted mt-0.5">You can sign back in anytime</p>
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.01 }}
@@ -265,8 +267,8 @@ export default function SettingsClient() {
 
                 <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 space-y-4">
                   <div>
-                    <p className="text-sm font-medium text-soft-white">Delete account</p>
-                    <p className="text-xs text-muted mt-0.5">Permanently remove all your data</p>
+                    <p className="text-base font-medium text-soft-white">Delete account</p>
+                    <p className="text-base text-muted mt-0.5">Permanently remove all your data</p>
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.01 }}

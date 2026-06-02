@@ -76,7 +76,7 @@ export default function MobileNav() {
                 }`}
               />
               <span
-                className={`text-[10px] font-medium transition-colors duration-200 ${
+                className={`text-sm font-medium transition-colors duration-200 ${
                   isActive ? 'text-accent-light' : 'text-muted'
                 }`}
               >
@@ -97,7 +97,7 @@ export default function MobileNav() {
           className="flex flex-col items-center justify-center gap-0.5 w-14 h-full"
         >
           <IconLogOut className="w-5 h-5 text-muted" />
-          <span className="text-[10px] font-medium text-muted">Sign Out</span>
+          <span className="text-sm font-medium text-muted">Sign Out</span>
         </motion.button>
       </div>
     </motion.nav>

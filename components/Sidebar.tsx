@@ -166,7 +166,7 @@ export default function Sidebar() {
               <IconUser className="w-[14px] h-[14px] text-accent-light" />
             </div>
             <span
-              className={`text-xs text-muted truncate transition-all duration-200 ${
+              className={`text-sm text-muted truncate transition-all duration-200 ${
                 resolvedCollapsed ? 'w-0 opacity-0 overflow-hidden' : ''
               }`}
             >

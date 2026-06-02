@@ -129,8 +129,8 @@ export default function ActivityTile() {
               <IconActivity className="w-4 h-4 text-accent-light" />
             </motion.div>
             <div>
-              <h3 className="text-sm font-semibold text-soft-white">Weekly Activity</h3>
-              <p className="text-[10px] text-subtle">Your learning streak</p>
+              <h3 className="text-base font-semibold text-soft-white">Weekly Activity</h3>
+              <p className="text-base text-subtle">Your learning streak</p>
             </div>
           </div>
           <motion.div
@@ -145,7 +145,7 @@ export default function ActivityTile() {
             >
               <IconTrendingUp className="w-3.5 h-3.5 text-emerald-400" />
             </motion.div>
-            <span className="text-[11px] font-semibold text-emerald-400">+{avg}</span>
+            <span className="text-base font-semibold text-emerald-400">+{avg}</span>
           </motion.div>
         </div>
 
@@ -183,7 +183,7 @@ export default function ActivityTile() {
                     animate={{ opacity: hoverBar === idx ? 1 : 0, y: hoverBar === idx ? 0 : 5 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <span className="text-[10px] font-medium text-accent-light">{value}</span>
+                    <span className="text-base font-medium text-accent-light">{value}</span>
                   </motion.div>
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
@@ -222,7 +222,7 @@ export default function ActivityTile() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 + idx * 0.06, duration: 0.3 }}
-                className="text-[10px] text-subtle text-center flex-1 font-medium"
+                className="text-base text-subtle text-center flex-1 font-medium"
               >
                 {day}
               </motion.span>
@@ -250,10 +250,10 @@ export default function ActivityTile() {
             >
               <AnimatedCounter
                 to={stat.value}
-                className={`text-lg font-bold ${stat.color}`}
+                className={`text-xl font-bold ${stat.color}`}
                 duration={1.2}
               />
-              <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
+              <div className="text-base text-subtle mt-0.5">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>

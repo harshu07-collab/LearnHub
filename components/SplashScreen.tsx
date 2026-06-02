@@ -184,8 +184,10 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
           transition={{ duration: 0.5, delay: 0.7 }}
           className="text-center"
         >
-          <h1 className="text-3xl font-bold text-white tracking-tight">LearnHub</h1>
-          <p className="text-sm text-white/40 mt-1 tracking-[0.2em] uppercase">Next-Gen Learning</p>
+          <h1 className="text-4xl font-bold text-white tracking-tight">LearnHub</h1>
+          <p className="text-base text-white/40 mt-1 tracking-[0.2em] uppercase">
+            Next-Gen Learning
+          </p>
         </motion.div>
       </motion.div>
     </motion.div>

@@ -16,8 +16,8 @@ export default function Error({
           <AlertCircle className="w-6 h-6 text-red-400" />
         </div>
 
-        <h2 className="text-lg font-semibold text-soft-white mb-2">Something went wrong</h2>
-        <p className="text-sm text-muted mb-6 leading-relaxed">
+        <h2 className="text-xl font-semibold text-soft-white mb-2">Something went wrong</h2>
+        <p className="text-base text-muted mb-6 leading-relaxed">
           {error.message || 'Could not load dashboard data. Please try again.'}
         </p>
 

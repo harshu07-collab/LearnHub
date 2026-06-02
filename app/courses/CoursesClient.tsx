@@ -79,8 +79,8 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
         className="flex flex-col md:flex-row md:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Courses</h1>
-          <p className="text-sm text-muted mt-1">Explore your learning path</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Courses</h1>
+          <p className="text-base text-muted mt-1">Explore your learning path</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -128,7 +128,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all ${
                 category === cat
                   ? 'bg-accent/10 border-accent/20 text-accent-light'
                   : 'border-border-1 text-muted hover:text-soft-white hover:border-border-2'
@@ -145,7 +145,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.15 }}
-        className="text-xs text-subtle"
+        className="text-base text-subtle"
       >
         {filtered.length} course{filtered.length !== 1 && 's'} found
       </motion.p>
@@ -162,13 +162,13 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
             <div className="w-14 h-14 rounded-2xl bg-surface-2 border border-border-1 flex items-center justify-center mb-4">
               <Search className="w-6 h-6 text-muted" />
             </div>
-            <p className="text-sm text-muted">No courses match your search</p>
+            <p className="text-base text-muted">No courses match your search</p>
             <button
               onClick={() => {
                 setSearch('');
                 setCategory('All');
               }}
-              className="text-xs text-accent-light mt-2 hover:underline"
+              className="text-base text-accent-light mt-2 hover:underline"
             >
               Clear filters
             </button>
@@ -204,14 +204,14 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
                       })}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-sm text-soft-white leading-snug">
+                      <h3 className="text-base font-semibold text-soft-white leading-snug">
                         {course.title}
                       </h3>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] text-subtle uppercase tracking-wider">
+                        <span className="text-base text-subtle uppercase tracking-wider">
                           Progress
                         </span>
-                        <span className="text-xs font-semibold text-accent-light">
+                        <span className="text-base font-semibold text-accent-light">
                           {course.progress}%
                         </span>
                       </div>
@@ -237,7 +237,7 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="mt-4 w-full py-2 rounded-lg bg-accent/10 border border-accent/15 text-accent-light text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-accent/20 transition-all"
+                    className="mt-4 w-full py-2 rounded-lg bg-accent/10 border border-accent/15 text-accent-light text-sm font-semibold flex items-center justify-center gap-1.5 hover:bg-accent/20 transition-all"
                   >
                     Continue Learning
                     <ArrowRight className="w-3 h-3" />
@@ -278,15 +278,15 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
                   })}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-medium text-soft-white truncate">{course.title}</h3>
+                  <h3 className="text-base font-medium text-soft-white truncate">{course.title}</h3>
                   <div className="flex items-center gap-3 mt-0.5">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3 text-muted" />
-                      <span className="text-[10px] text-subtle">12h left</span>
+                      <span className="text-base text-subtle">12h left</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <TrendingUp className="w-3 h-3 text-emerald-400" />
-                      <span className="text-[10px] text-emerald-400">{course.progress}%</span>
+                      <span className="text-base text-emerald-400">{course.progress}%</span>
                     </div>
                   </div>
                 </div>

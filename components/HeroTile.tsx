@@ -41,11 +41,11 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               className="w-1.5 h-1.5 rounded-full bg-emerald-400"
             />
-            <span className="text-[10px] font-medium text-subtle tracking-widest uppercase">
+            <span className="text-base font-medium text-subtle tracking-widest uppercase">
               Dashboard
             </span>
             <span className="w-1 h-1 rounded-full bg-accent/50" />
-            <span className="text-[10px] font-medium text-subtle tracking-widest uppercase">
+            <span className="text-base font-medium text-subtle tracking-widest uppercase">
               {new Date().toLocaleDateString('en-US', {
                 weekday: 'long',
                 month: 'short',
@@ -58,7 +58,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-soft-white mb-2 font-display leading-[1.05] tracking-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-soft-white mb-2 leading-[1.05] tracking-tight"
           >
             Welcome back,{' '}
             <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">
@@ -70,7 +70,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="text-base md:text-lg text-muted font-display"
+            className="text-lg md:text-xl text-muted"
           >
             Continue your learning journey
           </motion.p>
@@ -118,7 +118,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
                   className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent"
                   duration={1.2}
                 />
-                <span className="text-xs text-muted">day streak</span>
+                <span className="text-base text-muted">day streak</span>
               </div>
             </motion.div>
 
@@ -136,8 +136,8 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
                 <IconTarget className="w-4 h-4 text-accent-light" />
               </motion.div>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-sm font-medium text-soft-white">Data Structures</span>
-                <span className="text-xs text-muted">current focus</span>
+                <span className="text-base font-medium text-soft-white">Data Structures</span>
+                <span className="text-base text-muted">current focus</span>
               </div>
             </motion.div>
 
@@ -149,7 +149,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
               transition={{ type: 'spring', stiffness: 300, damping: 15 }}
             >
               <IconTrendingUp className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs text-muted">
+              <span className="text-base text-muted">
                 +<AnimatedCounter to={12} suffix="%" duration={1} /> this week
               </span>
             </motion.div>

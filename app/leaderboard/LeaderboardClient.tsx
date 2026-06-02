@@ -160,14 +160,14 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
       <div className="col-span-2 md:col-span-1 flex items-center gap-2 relative z-10">
         {isTop3 ? (
           <motion.span
-            className={`text-lg font-bold ${rankColors[idx]}`}
+            className={`text-xl font-bold ${rankColors[idx]}`}
             animate={hovered ? { scale: 1.2, rotate: [0, -5, 5, 0] } : { scale: 1 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
             {leader.rank}
           </motion.span>
         ) : (
-          <span className="text-sm font-medium text-muted">{leader.rank}</span>
+          <span className="text-base font-medium text-muted">{leader.rank}</span>
         )}
         {isTop3 && (
           <motion.svg
@@ -193,7 +193,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
         <motion.div
           animate={hovered ? { scale: 1.15 } : { scale: 1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
             leader.isCurrentUser
               ? 'bg-accent/20 text-accent-light border border-accent/30'
               : 'bg-surface-3 text-muted'
@@ -206,7 +206,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
         </motion.div>
         <div>
           <span
-            className={`text-sm font-medium ${leader.isCurrentUser ? 'text-accent-light' : 'text-soft-white'}`}
+            className={`text-base font-medium ${leader.isCurrentUser ? 'text-accent-light' : 'text-soft-white'}`}
           >
             {leader.name}
           </span>
@@ -225,7 +225,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
       {/* Points with AnimatedCounter */}
       <div className="col-span-3 md:col-span-2 text-right relative z-10">
         <motion.span
-          className="text-sm font-semibold text-soft-white inline-block"
+          className="text-base font-semibold text-soft-white inline-block"
           animate={hovered ? { scale: 1.05 } : { scale: 1 }}
         >
           <AnimatedCounter to={leader.points} duration={1.5} />
@@ -240,13 +240,13 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
         >
           <IconFlame className="w-3.5 h-3.5 text-orange-400" />
         </motion.div>
-        <span className="text-sm text-muted">{leader.streak}</span>
+        <span className="text-base text-muted">{leader.streak}</span>
       </div>
 
       {/* Courses */}
       <div className="hidden md:block col-span-2 text-right relative z-10">
         <motion.span
-          className="text-sm text-muted inline-block"
+          className="text-base text-muted inline-block"
           animate={hovered ? { scale: 1.05 } : { scale: 1 }}
         >
           {leader.courses}
@@ -257,7 +257,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
       <div className="hidden md:block col-span-1 text-right relative z-10">
         {isTop3 && idx === 0 && (
           <motion.span
-            className="text-[10px] text-amber-400 font-semibold inline-block"
+            className="text-base text-amber-400 font-semibold inline-block"
             animate={hovered ? { scale: 1.15 } : { scale: 1 }}
           >
             Leader
@@ -286,8 +286,8 @@ export default function LeaderboardPageClient() {
               <IconLeaderboard className="w-5 h-5 text-accent-light" />
             </motion.div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Leaderboard</h1>
-              <p className="text-sm text-muted mt-1">Top learners this month</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Leaderboard</h1>
+              <p className="text-base text-muted mt-1">Top learners this month</p>
             </div>
           </div>
         </motion.div>
@@ -345,17 +345,17 @@ export default function LeaderboardPageClient() {
                 </div>
                 <div className="relative z-10">
                   {stat.label === 'Your Rank' ? (
-                    <span className="text-xl font-bold text-soft-white">#{stat.value}</span>
+                    <span className="text-2xl font-bold text-soft-white">#{stat.value}</span>
                   ) : (
                     <AnimatedCounter
                       to={stat.value}
                       suffix={stat.suffix}
-                      className="text-xl font-bold text-soft-white"
+                      className="text-2xl font-bold text-soft-white"
                       duration={1.2}
                     />
                   )}
                 </div>
-                <div className="text-[10px] text-muted mt-0.5 relative z-10">{stat.label}</div>
+                <div className="text-base text-muted mt-0.5 relative z-10">{stat.label}</div>
               </motion.div>
             );
           })}
@@ -371,19 +371,19 @@ export default function LeaderboardPageClient() {
           <GrainOverlay opacity={0.03} />
           <div className="relative z-10">
             <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-3 border-b border-border-1">
-              <span className="col-span-1 text-[10px] text-subtle font-semibold uppercase tracking-widest">
+              <span className="col-span-1 text-base text-subtle font-semibold uppercase tracking-widest">
                 Rank
               </span>
-              <span className="col-span-4 text-[10px] text-subtle font-semibold uppercase tracking-widest">
+              <span className="col-span-4 text-base text-subtle font-semibold uppercase tracking-widest">
                 Name
               </span>
-              <span className="col-span-2 text-[10px] text-subtle font-semibold uppercase tracking-widest text-right">
+              <span className="col-span-2 text-base text-subtle font-semibold uppercase tracking-widest text-right">
                 Points
               </span>
-              <span className="col-span-2 text-[10px] text-subtle font-semibold uppercase tracking-widest text-right">
+              <span className="col-span-2 text-base text-subtle font-semibold uppercase tracking-widest text-right">
                 Streak
               </span>
-              <span className="col-span-2 text-[10px] text-subtle font-semibold uppercase tracking-widest text-right">
+              <span className="col-span-2 text-base text-subtle font-semibold uppercase tracking-widest text-right">
                 Courses
               </span>
               <span className="col-span-1" />

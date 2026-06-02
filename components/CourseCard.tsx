@@ -158,7 +158,7 @@ export default function CourseCard({
             })}
           </motion.div>
           <h3
-            className="font-semibold text-sm text-soft-white leading-snug flex-1 pt-1"
+            className="font-semibold text-base text-soft-white leading-snug flex-1 pt-1"
             style={{ transform: 'translateZ(24px)' }}
           >
             {title}
@@ -167,14 +167,14 @@ export default function CourseCard({
 
         <div className="mt-auto" style={{ transform: 'translateZ(16px)' }}>
           <div className="flex items-center justify-between mb-2.5">
-            <span className="text-[11px] font-medium text-subtle uppercase tracking-wider">
+            <span className="text-base font-medium text-subtle uppercase tracking-wider">
               Progress
             </span>
             <motion.span
               initial={{ opacity: 0, x: 5 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.25 + index * 0.08, duration: 0.3 }}
-              className="text-xs font-semibold text-accent-light"
+              className="text-base font-semibold text-accent-light"
             >
               {Math.round(progress)}%
             </motion.span>

@@ -61,12 +61,12 @@ export default function LoginPage() {
           <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
             <CheckCircle className="w-8 h-8 text-emerald-400" />
           </div>
-          <h2 className="text-xl font-bold text-soft-white mb-2">Check your email</h2>
-          <p className="text-sm text-muted mb-6 leading-relaxed">
+          <h2 className="text-2xl font-bold text-soft-white mb-2">Check your email</h2>
+          <p className="text-base text-muted mb-6 leading-relaxed">
             We sent a verification link to <strong className="text-soft-white">{email}</strong>.
             Click the link to activate your account.
           </p>
-          <p className="text-xs text-subtle">
+          <p className="text-base text-subtle">
             Didn&apos;t receive it? Check your spam folder or try signing up again.
           </p>
         </motion.div>
@@ -114,7 +114,7 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-muted mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-muted mb-1.5">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                 <input
@@ -129,7 +129,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-muted mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-muted mb-1.5">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
                 <input
@@ -161,7 +161,7 @@ export default function LoginPage() {
                   className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-red-500/5 border border-red-500/15"
                 >
                   <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
-                  <span className="text-xs text-red-300">{error}</span>
+                  <span className="text-base text-red-300">{error}</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -183,7 +183,7 @@ export default function LoginPage() {
           </form>
 
           {mode === 'login' && (
-            <p className="text-xs text-subtle text-center mt-4">
+            <p className="text-base text-subtle text-center mt-4">
               Demo: use any email (no verification needed in development)
             </p>
           )}

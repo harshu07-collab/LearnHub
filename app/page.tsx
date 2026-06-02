@@ -17,10 +17,10 @@ export default async function Home() {
           <GridItem cols={2}>
             <section className="h-full">
               <div className="flex items-center justify-between mb-4 px-1">
-                <h2 className="text-sm font-medium text-muted tracking-wide uppercase">
+                <h2 className="text-base font-medium text-muted tracking-wide uppercase">
                   Active Courses
                 </h2>
-                <span className="text-xs text-subtle">8 enrolled</span>
+                <span className="text-sm text-subtle">8 enrolled</span>
               </div>
               <Suspense fallback={<CourseListSkeleton />}>
                 <CourseListServer />

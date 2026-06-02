@@ -70,8 +70,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                     : typeIcons[t.type]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-soft-white">{t.title}</p>
-                  {t.description && <p className="text-xs text-muted mt-0.5">{t.description}</p>}
+                  <p className="text-base font-semibold text-soft-white">{t.title}</p>
+                  {t.description && <p className="text-base text-muted mt-0.5">{t.description}</p>}
                 </div>
                 <button
                   onClick={() => remove(t.id)}

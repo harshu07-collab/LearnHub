@@ -205,10 +205,10 @@ function StatCard({ stat, idx }: { stat: (typeof statCards)[0]; idx: number }) {
         <AnimatedCounter
           to={stat.value}
           suffix={stat.suffix}
-          className="text-xl font-bold text-soft-white"
+          className="text-2xl font-bold text-soft-white"
           duration={1.2}
         />
-        <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
+        <div className="text-base text-subtle mt-0.5">{stat.label}</div>
       </div>
     </motion.div>
   );
@@ -304,7 +304,7 @@ function RadialChart({ size = 160 }: { size?: number }) {
         x={cx}
         y={cy - 4}
         textAnchor="middle"
-        className="text-soft-white text-lg font-bold"
+        className="text-soft-white text-xl font-bold"
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 0.5 }}
@@ -365,7 +365,7 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
       >
         <Icon className={`w-5 h-5 ${unlocked ? ach.color : 'text-muted'}`} />
       </motion.div>
-      <h4 className={`text-xs font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}>
+      <h4 className={`text-base font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}>
         {ach.name}
       </h4>
       <p className="text-[9px] text-subtle mt-0.5">{ach.desc}</p>
@@ -410,8 +410,8 @@ export default function AnalyticsClient() {
               <IconBarChart className="w-5 h-5 text-accent-light" />
             </motion.div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Analytics</h1>
-              <p className="text-sm text-muted mt-1">Your learning journey at a glance</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Analytics</h1>
+              <p className="text-base text-muted mt-1">Your learning journey at a glance</p>
             </div>
           </div>
         </motion.div>
@@ -452,7 +452,7 @@ export default function AnalyticsClient() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 + idx * 0.05 }}
-                      className="text-[10px] text-accent-light font-medium"
+                      className="text-base text-accent-light font-medium"
                     >
                       {d.hours}h
                     </motion.span>
@@ -474,7 +474,7 @@ export default function AnalyticsClient() {
                         whileHover={{ opacity: 1 }}
                       />
                     </motion.div>
-                    <span className="text-[10px] text-subtle font-medium">{d.day}</span>
+                    <span className="text-base text-subtle font-medium">{d.day}</span>
                   </div>
                 );
               })}
@@ -488,7 +488,7 @@ export default function AnalyticsClient() {
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
             <GrainOverlay opacity={0.03} />
-            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
+            <h3 className="text-base font-semibold text-soft-white mb-5 flex items-center gap-2">
               <IconTarget className="w-4 h-4 text-accent-light" />
               Learning Distribution
             </h3>
@@ -510,9 +510,9 @@ export default function AnalyticsClient() {
                         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                         className={`w-2 h-2 rounded-full ${cat.bg}`}
                       />
-                      <span className="text-xs text-muted">{cat.label}</span>
+                      <span className="text-base text-muted">{cat.label}</span>
                     </div>
-                    <span className="text-xs font-semibold text-soft-white">{cat.value}%</span>
+                    <span className="text-base font-semibold text-soft-white">{cat.value}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-3 rounded-full overflow-hidden">
                     <motion.div
@@ -541,7 +541,7 @@ export default function AnalyticsClient() {
           className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
         >
           <GrainOverlay opacity={0.03} />
-          <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
+          <h3 className="text-base font-semibold text-soft-white mb-5 flex items-center gap-2">
             <IconAward className="w-4 h-4 text-amber-400" />
             Achievements
           </h3>

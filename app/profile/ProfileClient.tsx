@@ -203,7 +203,7 @@ export default function ProfileClient() {
               transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 15 }}
               className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-accent/30 to-purple-500/20 border border-accent/20 flex items-center justify-center flex-shrink-0"
             >
-              <span className="text-2xl md:text-3xl font-bold text-accent-light">{initials}</span>
+              <span className="text-3xl md:text-4xl font-bold text-accent-light">{initials}</span>
             </motion.div>
 
             <div className="flex-1 text-center md:text-left">
@@ -211,7 +211,7 @@ export default function ProfileClient() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15, duration: 0.5 }}
-                className="text-2xl md:text-3xl font-bold text-soft-white"
+                className="text-3xl md:text-4xl font-bold text-soft-white"
               >
                 <TypewriterText text={name} delay={0.2} />
               </motion.h1>
@@ -237,11 +237,11 @@ export default function ProfileClient() {
                     transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                     className="w-1.5 h-1.5 rounded-full bg-emerald-400"
                   />
-                  <span className="text-[10px] text-emerald-400/80 font-medium uppercase tracking-wider">
+                  <span className="text-sm text-emerald-400/80 font-medium uppercase tracking-wider">
                     Active
                   </span>
                 </div>
-                <span className="text-xs text-subtle">Member since {joinDate}</span>
+                <span className="text-sm text-subtle">Member since {joinDate}</span>
               </motion.div>
             </div>
 
@@ -251,7 +251,7 @@ export default function ProfileClient() {
               transition={{ delay: 0.35 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent-light text-xs font-semibold hover:bg-accent/20 transition-all"
+              className="px-4 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent-light text-sm font-semibold hover:bg-accent/20 transition-all"
             >
               Edit Profile
             </motion.button>
@@ -292,10 +292,10 @@ export default function ProfileClient() {
                 <AnimatedCounter
                   to={stat.value}
                   prefix={stat.prefix || ''}
-                  className="text-xl font-bold text-soft-white"
+                  className="text-2xl font-bold text-soft-white"
                   duration={1.2}
                 />
-                <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
+                <div className="text-sm text-subtle mt-0.5">{stat.label}</div>
               </motion.div>
             );
           })}
@@ -323,7 +323,7 @@ export default function ProfileClient() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.25 + idx * 0.03, duration: 0.3 }}
                   whileHover={{ scale: 1.08, y: -1 }}
-                  className="px-3 py-1.5 rounded-lg bg-accent/8 border border-accent/10 text-xs font-medium text-accent-light cursor-default"
+                  className="px-3 py-1.5 rounded-lg bg-accent/8 border border-accent/10 text-sm font-medium text-accent-light cursor-default"
                 >
                   {skill}
                 </motion.span>
@@ -364,7 +364,7 @@ export default function ProfileClient() {
                     </motion.div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-soft-white truncate">{act.action}</p>
-                      <p className="text-[10px] text-subtle mt-0.5">
+                      <p className="text-sm text-subtle mt-0.5">
                         {act.course} &middot; {act.time}
                       </p>
                     </div>

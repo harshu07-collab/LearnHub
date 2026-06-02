@@ -135,8 +135,8 @@ export default function AchievementsTile() {
             <IconTrophy className="w-4 h-4 text-amber-400" />
           </motion.div>
           <div>
-            <h3 className="text-sm font-semibold text-soft-white">Achievements</h3>
-            <p className="text-[10px] text-subtle">Your recent milestones</p>
+            <h3 className="text-base font-semibold text-soft-white">Achievements</h3>
+            <p className="text-base text-subtle">Your recent milestones</p>
           </div>
         </div>
 
@@ -183,7 +183,7 @@ export default function AchievementsTile() {
                   <Icon className={`w-[18px] h-[18px] ${unlocked ? ach.color : 'text-muted'}`} />
                 </motion.div>
                 <h4
-                  className={`text-xs font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
+                  className={`text-base font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
                 >
                   {ach.name}
                 </h4>

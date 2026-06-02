@@ -28,8 +28,8 @@ export default function CourseList({ courses }: CourseListProps) {
             </linearGradient>
           </defs>
         </svg>
-        <p className="text-sm text-muted text-center">No courses available yet.</p>
-        <p className="text-xs text-subtle mt-1 text-center">
+        <p className="text-base text-muted text-center">No courses available yet.</p>
+        <p className="text-base text-subtle mt-1 text-center">
           Start learning to see your progress here.
         </p>
       </div>

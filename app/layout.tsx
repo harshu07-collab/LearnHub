@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Bricolage_Grotesque, Geist_Mono } from 'next/font/google';
+import { Bricolage_Grotesque, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Sidebar from '@/components/Sidebar';
 import MobileNav from '@/components/MobileNav';
@@ -10,14 +10,8 @@ import CommandPalette from '@/components/CommandPalette';
 import PageTransition from '@/components/PageTransition';
 import { ToastProvider } from '@/components/Toast';
 
-const inter = Inter({
-  variable: '--font-body',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
 const bricolage = Bricolage_Grotesque({
-  variable: '--font-display',
+  variable: '--font-sans',
   subsets: ['latin'],
   display: 'swap',
 });
@@ -39,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${bricolage.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${bricolage.variable} ${geistMono.variable}`}>
       <body className="h-screen flex flex-col bg-deep-0 text-soft-white overflow-hidden selection:bg-accent/30">
         <AuthGuard>
           <ToastProvider>

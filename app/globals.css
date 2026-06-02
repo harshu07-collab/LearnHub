@@ -20,8 +20,7 @@
   --color-soft-white: rgba(255, 255, 255, 0.9);
   --color-muted: rgba(255, 255, 255, 0.5);
   --color-subtle: rgba(255, 255, 255, 0.35);
-  --font-sans: var(--font-body), system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-mono), "Fira Code", monospace;
 }
 
@@ -41,8 +40,9 @@
     background: var(--color-deep-0);
     color: var(--color-soft-white);
     font-family: var(--font-sans);
-    font-size: 16px;
-    line-height: 1.6;
+    font-weight: 450;
+    font-size: 17px;
+    line-height: 1.7;
     min-height: 100vh;
     overflow-x: hidden;
   }

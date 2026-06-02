@@ -204,7 +204,7 @@ export default function CommandPalette() {
                 placeholder="Search pages and courses..."
                 className="flex-1 bg-transparent text-sm text-soft-white placeholder:text-muted focus:outline-none"
               />
-              <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-surface-2 text-muted border border-border-1">
+              <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-sm font-medium bg-surface-2 text-muted border border-border-1">
                 <Command className="w-2.5 h-2.5" />K
               </kbd>
             </div>
@@ -214,7 +214,7 @@ export default function CommandPalette() {
               {filtered.length === 0 ? (
                 <div className="flex flex-col items-center py-8">
                   <Search className="w-8 h-8 text-surface-3 mb-2" />
-                  <p className="text-xs text-muted">No results for &quot;{query}&quot;</p>
+                  <p className="text-sm text-muted">No results for &quot;{query}&quot;</p>
                 </div>
               ) : (
                 filtered.map((item, idx) => {
@@ -245,7 +245,7 @@ export default function CommandPalette() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">{item.label}</div>
-                        <div className="text-[10px] text-subtle">{item.category}</div>
+                        <div className="text-sm text-subtle">{item.category}</div>
                       </div>
                       <ArrowRight
                         className={`w-3.5 h-3.5 transition-opacity ${
@@ -267,19 +267,19 @@ export default function CommandPalette() {
                 <kbd className="px-1 py-0.5 rounded text-[9px] font-medium bg-surface-2 text-muted border border-border-1">
                   ↓
                 </kbd>
-                <span className="text-[10px] text-subtle">navigate</span>
+                <span className="text-sm text-subtle">navigate</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <kbd className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-surface-2 text-muted border border-border-1">
                   ↵
                 </kbd>
-                <span className="text-[10px] text-subtle">open</span>
+                <span className="text-sm text-subtle">open</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <kbd className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-surface-2 text-muted border border-border-1">
                   esc
                 </kbd>
-                <span className="text-[10px] text-subtle">close</span>
+                <span className="text-sm text-subtle">close</span>
               </div>
             </div>
           </motion.div>
