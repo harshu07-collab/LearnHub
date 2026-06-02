@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-deep-0: #000000;
+  --color-deep-1: #070708;
+  --color-deep-2: #0c0c0f;
+  --color-deep-3: #111115;
+  --color-deep-4: #16161b;
+  --color-surface-1: rgba(255, 255, 255, 0.04);
+  --color-surface-2: rgba(255, 255, 255, 0.06);
+  --color-surface-3: rgba(255, 255, 255, 0.08);
+  --color-border-1: rgba(255, 255, 255, 0.06);
+  --color-border-2: rgba(255, 255, 255, 0.10);
+  --color-border-3: rgba(255, 255, 255, 0.15);
+  --color-accent: #6366f1;
+  --color-accent-light: #818cf8;
+  --color-accent-lighter: #a5b4fc;
+  --color-accent-dark: #4f46e5;
+  --color-glow: rgba(99, 102, 241, 0.5);
+  --color-soft-white: rgba(255, 255, 255, 0.9);
+  --color-muted: rgba(255, 255, 255, 0.5);
+  --color-subtle: rgba(255, 255, 255, 0.35);
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), "Fira Code", monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    height: 100%;
+    color-scheme: dark;
+    background-color: var(--color-deep-0);
+  }
+
+  body {
+    background: var(--color-deep-0);
+    color: var(--color-soft-white);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgba(99, 102, 241, 0.3);
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--color-accent);
+    border-radius: 0.375rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }

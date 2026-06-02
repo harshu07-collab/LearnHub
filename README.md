@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LearnHub — Next-Gen Learning Dashboard
+
+A premium, futuristic learning dashboard built with **Next.js 16**, **Tailwind CSS v4**, **Framer Motion v12**, and **Supabase**. Features dark-only theme, bento grid layout, server-rendered data, spring animations, and Supabase Auth with email verification.
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Styling | Tailwind CSS v4 (CSS-first config via `@theme`) |
+| Animation | Framer Motion v12 (spring physics, layoutId) |
+| Icons | Lucide React |
+| Database | Supabase PostgreSQL |
+| Auth | Supabase Auth (email/password + verification) |
+| Font | Geist (Vercel) |
+
+## Features
+
+- **Dark-only theme**: Deep blacks, charcoal grays, indigo accent
+- **Bento grid layout**: Responsive dashboard with hero, course cards, activity chart
+- **Supabase Auth**: Email sign-up/login with verification flow
+- **Server-rendered data**: Course data fetched via RSC from Supabase
+- **Framer Motion animations**: Staggered entrance, spring hovers, `layoutId` nav indicator
+- **Grain texture**: Subtle noise overlay on all bento tiles
+- **Custom SVG logo**: Hand-crafted geometric mark (not AI-generated)
+- **Zero layout shifts**: All animations use `transform` and `opacity` only
+- **Responsive**: Desktop sidebar, tablet icon-only, mobile bottom nav
+
+## Architecture
+
+### Server/Client Component Split
+
+```
+app/
+├── layout.tsx          # Server — wraps AuthGuard
+├── page.tsx            # Server — composes bento grid, passes children
+├── login/page.tsx      # Client — auth form (login/register)
+├── auth/callback       # Server — OAuth email confirmation handler
+├── loading.tsx         # Server — skeleton loader for page shell
+└── error.tsx           # Client — error boundary with retry
+
+components/
+├── AuthGuard.tsx       # Client — auth provider + redirect logic
+├── AuthProvider.tsx    # Client — React context for auth state
+├── Sidebar.tsx         # Client — nav with layoutId, user info, sign out
+├── HeroTile.tsx        # Client — greeting + streak with canvas orbs
+├── CourseListServer.tsx# Server — fetches Supabase data with fallback
+├── CourseList.tsx      # Client — renders course grid or empty state
+├── CourseCard.tsx      # Client — card with tilt, grain, animated progress
+├── ActivityTile.tsx    # Client — bar chart with spring animation
+├── MobileNav.tsx       # Client — bottom nav for mobile
+├── GrainOverlay.tsx    # Client — SVG noise texture overlay
+└── Logo.tsx            # Client — custom SVG logo mark
+```
+
+### Data Flow
+
+1. **Auth**: `AuthProvider` checks Supabase session → if no user, redirects to `/login`
+2. **Courses**: `CourseListServer` (RSC) calls `fetchCourses()` via anon key → falls back to local data if Supabase unreachable
+3. **Icons**: `lib/icon-utils.ts` maps `icon_name` strings to Lucide components
+4. **Defaults**: Since Supabase schema lacks `icon_name`/`progress` columns, `supabase.server.ts` derives them from course title keywords
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone & Install
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Supabase Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create a free project at [supabase.com](https://supabase.com)
+2. Run the SQL below in Supabase SQL Editor
+3. Copy your project URL, anon key, and service role key
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sql
+CREATE TABLE courses (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  icon_name TEXT,
+  progress INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
 
-## Learn More
+INSERT INTO courses (title, description, icon_name, progress) VALUES
+  ('Advanced React Patterns', 'Master composition, render props, and hooks', 'Code', 75),
+  ('AI & Machine Learning Fundamentals', 'Neural networks, supervised learning', 'Brain', 52),
+  ('Cloud Architecture with AWS', 'Scalable infra with EC2, S3, Lambda', 'Cloud', 88),
+  ('Web Design Mastery', 'UI/UX principles, color theory, typography', 'Palette', 45);
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Environment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cp .env.local.example .env.local
+# Fill in your Supabase credentials
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Enable **Email Auth** in Supabase Dashboard → Authentication → Providers → Email.
 
-## Deploy on Vercel
+### 4. Run
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev        # Development
+npm run build      # Production build + type check
+npm start          # Start production server
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Auth Flow
+
+1. User visits `/` → redirected to `/login`
+2. Sign up with email/password → verification email sent
+3. Click verification link → auto-redirects to dashboard
+4. `AuthGuard` wraps the layout, checks session on mount
+5. Sidebar shows user avatar and sign-out button
+6. `HeroTile` reads user email from auth context for the greeting
+
+## Animations
+
+| Element | Technique |
+|---------|-----------|
+| Page load | Framer Motion staggered entrance (opacity + translateY) |
+| Card hover | Spring physics (`stiffness: 300, damping: 20`) + 3D tilt |
+| Progress bar | Animates from 0 → value with shimmer overlay |
+| Nav indicator | `layoutId="nav-indicator"` — snaps between items with spring |
+| Sidebar collapse | CSS transitions (width, opacity) |
+| Canvas orbs | GPU-accelerated `<canvas>` gradient animation |
+| Grain texture | SVG `<feTurbulence>` filter, transforms only |
+
+## Key Decisions
+
+- **Framer Motion v12**: Import from `framer-motion` (not `/client`) with `'use client'` boundaries. Layout-level components avoid framer-motion to prevent SSR issues with `_not-found` static generation.
+- **Tailwind v4**: No `tailwind.config.js` — all tokens in `globals.css` via `@theme` directive.
+- **Supabase anon key**: Used for both client auth and server data fetching (with RLS). Service role key avoided due to table permission constraints.
+- **Fallback data**: If Supabase is unreachable, course data renders from hardcoded defaults to prevent blank screen.
+- **Custom logo**: Abstract geometric mark with two overlapping wings + center spine — represents continuous learning. Not an AI-generated icon.
+
+## Project Structure
+
+```
+├── app/            # Next.js App Router pages
+├── components/     # React components (server + client)
+├── hooks/          # Custom hooks
+├── lib/            # Utilities, Supabase clients
+├── types/          # TypeScript interfaces
+├── public/         # Static assets
+├── scripts/        # Helper scripts
+└── supabase/       # SQL schema + seeds
+```
