@@ -6,7 +6,6 @@ import { useAuth } from './AuthProvider';
 import GrainOverlay from './GrainOverlay';
 import TypewriterText from './TypewriterText';
 import AnimatedCounter from './AnimatedCounter';
-import ThreeModel from './ThreeModel';
 
 interface HeroTileProps {
   userName?: string;
@@ -157,14 +156,6 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
         </div>
 
         {/* 3D knowledge gem */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-          className="relative mt-6 md:mt-0 md:ml-6 flex-shrink-0 self-center md:self-start -mr-4 md:mr-0"
-        >
-          <ThreeModel />
-        </motion.div>
       </div>
 
       {/* Animated gradient border — rotates hue */}
