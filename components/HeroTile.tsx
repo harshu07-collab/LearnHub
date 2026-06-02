@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Target, TrendingUp } from 'lucide-react';
+import { IconTarget, IconTrendingUp } from './CustomIcons';
 import { useAuth } from './AuthProvider';
 import GrainOverlay from './GrainOverlay';
 import TypewriterText from './TypewriterText';
@@ -166,7 +166,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
           <div className="w-px h-8 bg-border-1" />
 
           <motion.div className="flex items-center gap-2.5" whileHover={{ scale: 1.03 }}>
-            <Target className="w-4 h-4 text-accent-light" />
+            <IconTarget className="w-4 h-4 text-accent-light" />
             <div className="flex items-baseline gap-1.5">
               <span className="text-sm font-medium text-soft-white">Advanced React</span>
               <span className="text-xs text-muted">current focus</span>
@@ -176,7 +176,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
           <div className="w-px h-8 bg-border-1" />
 
           <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.03 }}>
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
+            <IconTrendingUp className="w-4 h-4 text-emerald-400" />
             <span className="text-xs text-muted">
               +<AnimatedCounter to={12} suffix="%" duration={1} /> this week
             </span>

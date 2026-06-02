@@ -1,4 +1,5 @@
 import React from 'react';
+import { customIconMap } from '@/components/CustomIcons';
 import {
   BookOpen,
   Brain,
@@ -46,7 +47,10 @@ const iconMap: Record<string, LucideIcon> = {
   Feather,
 };
 
-export function getIcon(iconName: string = 'BookOpen'): LucideIcon {
+export function getIcon(
+  iconName: string = 'BookOpen',
+): React.ComponentType<{ className?: string }> {
+  if (customIconMap[iconName]) return customIconMap[iconName];
   return iconMap[iconName] || BookOpen;
 }
 

@@ -3,7 +3,6 @@
 import { useRef, useState, createElement } from 'react';
 import { motion } from 'framer-motion';
 import { getIcon } from '@/lib/icon-utils';
-import { customIconMap } from './CustomIcons';
 import GrainOverlay from './GrainOverlay';
 
 interface CourseCardProps {
@@ -91,13 +90,9 @@ export default function CourseCard({
             transition={{ delay: 0.15 + index * 0.08, duration: 0.3 }}
             className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent/20 to-purple-500/15 flex items-center justify-center flex-shrink-0 border border-accent/10"
           >
-            {customIconMap[icon_name]
-              ? createElement(customIconMap[icon_name], {
-                  className: 'w-[18px] h-[18px] text-accent-light',
-                })
-              : createElement(getIcon(icon_name), {
-                  className: 'w-[18px] h-[18px] text-accent-light',
-                })}
+            {createElement(getIcon(icon_name), {
+              className: 'w-[18px] h-[18px] text-accent-light',
+            })}
           </motion.div>
           <h3 className="font-semibold text-sm text-soft-white leading-snug flex-1 pt-1">
             {title}

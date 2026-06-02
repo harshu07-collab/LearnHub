@@ -1,14 +1,14 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { BookOpen, BarChart3, LogOut, Home, Settings } from 'lucide-react';
+import { IconBookOpen, IconBarChart, IconLogOut, IconHome, IconSettings } from './CustomIcons';
 import { useAuth } from './AuthProvider';
 
 const items = [
-  { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/' },
-  { id: 'courses', label: 'Courses', icon: BookOpen, href: '/courses' },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
-  { id: 'settings', label: 'Settings', icon: Settings, href: '/settings' },
+  { id: 'dashboard', label: 'Dashboard', icon: IconHome, href: '/' },
+  { id: 'courses', label: 'Courses', icon: IconBookOpen, href: '/courses' },
+  { id: 'analytics', label: 'Analytics', icon: IconBarChart, href: '/analytics' },
+  { id: 'settings', label: 'Settings', icon: IconSettings, href: '/settings' },
 ];
 
 export default function MobileNav() {
@@ -53,7 +53,7 @@ export default function MobileNav() {
           onClick={() => signOut()}
           className="flex flex-col items-center justify-center gap-0.5 w-14 h-full"
         >
-          <LogOut className="w-5 h-5 text-muted" />
+          <IconLogOut className="w-5 h-5 text-muted" />
           <span className="text-[10px] font-medium text-muted">Sign Out</span>
         </button>
       </div>

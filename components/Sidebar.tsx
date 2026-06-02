@@ -3,15 +3,23 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
-import { BookOpen, BarChart3, LogOut, ChevronLeft, ChevronRight, User, Home } from 'lucide-react';
+import {
+  IconBookOpen,
+  IconBarChart,
+  IconLogOut,
+  IconChevronLeft,
+  IconChevronRight,
+  IconUser,
+  IconHome,
+} from './CustomIcons';
 import CursorGlow from './CursorGlow';
 import Logo from './Logo';
 import { useAuth } from './AuthProvider';
 
 const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/' },
-  { id: 'courses', label: 'Courses', icon: BookOpen, href: '/courses' },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
+  { id: 'dashboard', label: 'Dashboard', icon: IconHome, href: '/' },
+  { id: 'courses', label: 'Courses', icon: IconBookOpen, href: '/courses' },
+  { id: 'analytics', label: 'Analytics', icon: IconBarChart, href: '/analytics' },
 ];
 
 export default function Sidebar() {
@@ -106,7 +114,7 @@ export default function Sidebar() {
         <div className="p-2 border-t border-border-1 space-y-1">
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg">
             <div className="w-7 h-7 rounded-lg bg-accent/10 border border-accent/10 flex items-center justify-center flex-shrink-0">
-              <User className="w-[14px] h-[14px] text-accent-light" />
+              <IconUser className="w-[14px] h-[14px] text-accent-light" />
             </div>
             <span
               className={`text-xs text-muted truncate transition-all duration-200 ${
@@ -121,7 +129,7 @@ export default function Sidebar() {
             onClick={() => signOut()}
             className="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium w-full transition-all duration-200 hover:bg-red-500/5 text-red-400/70 hover:text-red-400"
           >
-            <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
+            <IconLogOut className="w-[18px] h-[18px] flex-shrink-0" />
             <span
               className={`text-sm whitespace-nowrap transition-all duration-200 ${
                 resolvedCollapsed ? 'w-0 opacity-0 overflow-hidden' : ''
@@ -138,7 +146,11 @@ export default function Sidebar() {
             onClick={() => setCollapsed(!collapsed)}
             className="absolute -right-3 top-14 w-6 h-6 rounded-full bg-deep-2 border border-border-2 flex items-center justify-center text-muted hover:text-soft-white hover:border-border-3 transition-all duration-200"
           >
-            {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+            {collapsed ? (
+              <IconChevronRight className="w-3 h-3" />
+            ) : (
+              <IconChevronLeft className="w-3 h-3" />
+            )}
           </button>
         )}
       </nav>

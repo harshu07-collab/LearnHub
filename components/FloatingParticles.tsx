@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function FloatingParticles() {
+export default function GridBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -11,69 +11,81 @@ export default function FloatingParticles() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const particles: {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      alpha: number;
-    }[] = [];
-    const count = 30;
-
     const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
     resize();
     window.addEventListener('resize', resize);
 
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: 1 + Math.random() * 2,
-        alpha: 0.1 + Math.random() * 0.2,
-      });
-    }
-
     let animId: number;
+    let time = 0;
+
     const draw = () => {
+      time += 0.001;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
+      const w = canvas.width;
+      const h = canvas.height;
+      const cellSize = 60;
 
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
+      const cols = Math.ceil(w / cellSize);
+      const rows = Math.ceil(h / cellSize);
 
+      const cx = w / 2;
+      const cy = h / 2;
+      const maxDist = Math.sqrt(cx * cx + cy * cy);
+
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.08)';
+      ctx.lineWidth = 0.5;
+
+      for (let row = 0; row <= rows; row++) {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(99, 102, 241, ${p.alpha})`;
-        ctx.fill();
+        for (let col = 0; col <= cols; col++) {
+          const x = col * cellSize;
+          const y = row * cellSize;
+
+          const dx = x - cx;
+          const dy = y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const intensity = 1 - Math.min(dist / maxDist, 1);
+          const alpha = intensity * intensity * 0.06;
+          const wave = Math.sin((y + x) * 0.01 + time) * 0.15;
+
+          const px = x + Math.sin(time * 0.3 + y * 0.02) * 2;
+          const py = y + Math.cos(time * 0.25 + x * 0.02) * 2;
+
+          ctx.globalAlpha = Math.max(0, alpha + wave * alpha);
+          if (col === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
       }
 
-      // Draw connections between nearby particles
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+      for (let col = 0; col <= cols; col++) {
+        ctx.beginPath();
+        for (let row = 0; row <= rows; row++) {
+          const x = col * cellSize;
+          const y = row * cellSize;
+
+          const dx = x - cx;
+          const dy = y - cy;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.04 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
+          const intensity = 1 - Math.min(dist / maxDist, 1);
+          const alpha = intensity * intensity * 0.06;
+          const wave = Math.sin((x + y) * 0.01 + time) * 0.15;
+
+          const px = x + Math.sin(time * 0.3 + y * 0.02) * 2;
+          const py = y + Math.cos(time * 0.25 + x * 0.02) * 2;
+
+          ctx.globalAlpha = Math.max(0, alpha + wave * alpha);
+          if (row === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
         }
+        ctx.stroke();
       }
+
+      ctx.globalAlpha = 1;
 
       animId = requestAnimationFrame(draw);
     };
@@ -85,7 +97,5 @@ export default function FloatingParticles() {
     };
   }, []);
 
-  return (
-    <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
-  );
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
 }

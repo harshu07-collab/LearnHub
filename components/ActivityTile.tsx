@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { TrendingUp, Activity } from 'lucide-react';
+import { IconTrendingUp, IconActivity } from './CustomIcons';
 import GrainOverlay from './GrainOverlay';
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -44,7 +44,7 @@ export default function ActivityTile() {
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/10 flex items-center justify-center">
-              <Activity className="w-4 h-4 text-accent-light" />
+              <IconActivity className="w-4 h-4 text-accent-light" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-soft-white">Weekly Activity</h3>
@@ -57,7 +57,7 @@ export default function ActivityTile() {
             transition={{ delay: 0.3, type: 'spring', stiffness: 200, damping: 15 }}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/15"
           >
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            <IconTrendingUp className="w-3.5 h-3.5 text-emerald-400" />
             <span className="text-[11px] font-semibold text-emerald-400">+{avg}</span>
           </motion.div>
         </div>
