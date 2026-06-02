@@ -18,21 +18,109 @@ export default function Logo({ size = 28, showText = true }: LogoProps) {
         xmlns="http://www.w3.org/2000/svg"
         className="flex-shrink-0"
       >
-        {/* Background capsule */}
+        {/* Background rounded rect */}
         <rect x="0.5" y="0.5" width="31" height="31" rx="7" fill="url(#lg-bg)" />
 
-        {/* Left wing - upper */}
-        <path d="M6 22L6 12L11 8L11 18L6 22Z" fill="rgba(255,255,255,0.92)" />
-        {/* Center spine */}
-        <rect x="11" y="8" width="3" height="16" rx="1" fill="rgba(255,255,255,0.85)" />
-        {/* Right wing - lower */}
-        <path d="M14 22L14 12L19 8L19 18L14 22Z" fill="rgba(255,255,255,0.92)" />
-        {/* Right wing - upper overlap */}
-        <path d="M19 8L24 12L24 22L19 18L19 8Z" fill="rgba(255,255,255,0.45)" />
-        {/* Top accent bar */}
-        <rect x="8" y="6" width="9" height="2" rx="1" fill="rgba(255,255,255,0.35)" />
+        {/* Left page — sweeping curve */}
+        <path d="M6 22V10C6 8.9 6.9 8 8 8H11V22H6Z" fill="rgba(255,255,255,0.9)" />
+        {/* Left page spine fold */}
+        <path
+          d="M6 22V10C6 8.9 6.9 8 8 8H11"
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth="0.5"
+          fill="none"
+        />
+        {/* Left page inner highlight */}
+        <path
+          d="M9 10V20"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+        />
+        {/* Left page text lines */}
+        <line
+          x1="7.5"
+          y1="13"
+          x2="10"
+          y2="13"
+          stroke="rgba(255,255,255,0.2)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="7.5"
+          y1="15"
+          x2="9.5"
+          y2="15"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="7.5"
+          y1="17"
+          x2="10"
+          y2="17"
+          stroke="rgba(255,255,255,0.2)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+        />
+
+        {/* Right page — sweeping curve */}
+        <path d="M21 22V10C21 8.9 20.1 8 19 8H16V22H21Z" fill="rgba(255,255,255,0.85)" />
+        {/* Right page spine fold */}
+        <path
+          d="M21 22V10C21 8.9 20.1 8 19 8H16"
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth="0.5"
+          fill="none"
+        />
+        {/* Right page inner highlight */}
+        <path
+          d="M18 10V20"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+        />
+        {/* Right page text lines */}
+        <line
+          x1="17"
+          y1="13"
+          x2="19.5"
+          y2="13"
+          stroke="rgba(255,255,255,0.2)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="17"
+          y1="15"
+          x2="19"
+          y2="15"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="17"
+          y1="17"
+          x2="19.5"
+          y2="17"
+          stroke="rgba(255,255,255,0.2)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+        />
+
+        {/* Spine center */}
+        <rect x="11" y="8" width="2" height="14" rx="0.6" fill="rgba(255,255,255,0.65)" />
+        {/* Spine highlight */}
+        <rect x="11.5" y="9" width="0.4" height="12" rx="0.2" fill="rgba(255,255,255,0.25)" />
+
+        {/* Top accent dot */}
+        <circle cx="14.5" cy="6" r="1.2" fill="rgba(255,255,255,0.2)" />
+
         {/* Bottom accent bar */}
-        <rect x="8" y="24" width="9" height="2" rx="1" fill="rgba(255,255,255,0.2)" />
+        <rect x="12" y="24" width="5" height="1.5" rx="0.75" fill="rgba(255,255,255,0.15)" />
 
         <defs>
           <linearGradient id="lg-bg" x1="0" y1="0" x2="32" y2="32">

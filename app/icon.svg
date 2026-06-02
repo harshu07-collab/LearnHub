@@ -1,11 +1,21 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect x="0.5" y="0.5" width="31" height="31" rx="7" fill="url(#lg-bg)"/>
-  <path d="M6 22L6 12L11 8L11 18L6 22Z" fill="rgba(255,255,255,0.92)"/>
-  <rect x="11" y="8" width="3" height="16" rx="1" fill="rgba(255,255,255,0.85)"/>
-  <path d="M14 22L14 12L19 8L19 18L14 22Z" fill="rgba(255,255,255,0.92)"/>
-  <path d="M19 8L24 12L24 22L19 18L19 8Z" fill="rgba(255,255,255,0.45)"/>
-  <rect x="8" y="6" width="9" height="2" rx="1" fill="rgba(255,255,255,0.35)"/>
-  <rect x="8" y="24" width="9" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
+  <path d="M6 22V10C6 8.9 6.9 8 8 8H11V22H6Z" fill="rgba(255,255,255,0.9)"/>
+  <path d="M6 22V10C6 8.9 6.9 8 8 8H11" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" fill="none"/>
+  <path d="M9 10V20" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" stroke-linecap="round"/>
+  <line x1="7.5" y1="13" x2="10" y2="13" stroke="rgba(255,255,255,0.2)" stroke-width="0.4" stroke-linecap="round"/>
+  <line x1="7.5" y1="15" x2="9.5" y2="15" stroke="rgba(255,255,255,0.15)" stroke-width="0.4" stroke-linecap="round"/>
+  <line x1="7.5" y1="17" x2="10" y2="17" stroke="rgba(255,255,255,0.2)" stroke-width="0.4" stroke-linecap="round"/>
+  <path d="M21 22V10C21 8.9 20.1 8 19 8H16V22H21Z" fill="rgba(255,255,255,0.85)"/>
+  <path d="M21 22V10C21 8.9 20.1 8 19 8H16" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" fill="none"/>
+  <path d="M18 10V20" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" stroke-linecap="round"/>
+  <line x1="17" y1="13" x2="19.5" y2="13" stroke="rgba(255,255,255,0.2)" stroke-width="0.4" stroke-linecap="round"/>
+  <line x1="17" y1="15" x2="19" y2="15" stroke="rgba(255,255,255,0.15)" stroke-width="0.4" stroke-linecap="round"/>
+  <line x1="17" y1="17" x2="19.5" y2="17" stroke="rgba(255,255,255,0.2)" stroke-width="0.4" stroke-linecap="round"/>
+  <rect x="11" y="8" width="2" height="14" rx="0.6" fill="rgba(255,255,255,0.65)"/>
+  <rect x="11.5" y="9" width="0.4" height="12" rx="0.2" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="14.5" cy="6" r="1.2" fill="rgba(255,255,255,0.2)"/>
+  <rect x="12" y="24" width="5" height="1.5" rx="0.75" fill="rgba(255,255,255,0.15)"/>
   <defs>
     <linearGradient id="lg-bg" x1="0" y1="0" x2="32" y2="32">
       <stop stop-color="#6366f1"/>
