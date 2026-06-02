@@ -9,8 +9,8 @@ export default async function CoursesPage() {
     courses = await fetchCourses();
   } catch {
     courses = [
-      { id: '1', title: 'Advanced React Patterns', icon_name: 'Code', progress: 75 },
-      { id: '2', title: 'AI & Machine Learning Fundamentals', icon_name: 'Brain', progress: 52 },
+      { id: '1', title: 'TypeScript Mastery', icon_name: 'Code', progress: 75 },
+      { id: '2', title: 'System Design & Architecture', icon_name: 'Brain', progress: 52 },
       { id: '3', title: 'Cloud Architecture with AWS', icon_name: 'Cloud', progress: 88 },
       { id: '4', title: 'Web Design Mastery', icon_name: 'Palette', progress: 45 },
     ];

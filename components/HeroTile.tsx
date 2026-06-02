@@ -207,7 +207,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
               <IconTarget className="w-4 h-4 text-accent-light" />
             </motion.div>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-sm font-medium text-soft-white">Advanced React</span>
+              <span className="text-sm font-medium text-soft-white">Data Structures</span>
               <span className="text-xs text-muted">current focus</span>
             </div>
           </motion.div>

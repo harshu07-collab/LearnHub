@@ -43,14 +43,14 @@ const commands: CommandItem[] = [
 const courseShortcuts = [
   {
     id: 'course-1',
-    label: 'Advanced React Patterns',
+    label: 'TypeScript Mastery',
     icon: 'Code',
     href: '/courses',
     category: 'Courses',
   },
   {
     id: 'course-2',
-    label: 'AI & Machine Learning',
+    label: 'System Design & Architecture',
     icon: 'Brain',
     href: '/courses',
     category: 'Courses',
