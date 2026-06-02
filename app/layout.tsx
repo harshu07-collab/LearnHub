@@ -4,7 +4,11 @@ import './globals.css';
 import Sidebar from '@/components/Sidebar';
 import MobileNav from '@/components/MobileNav';
 import AmbientBackground from '@/components/AmbientBackground';
+import FloatingParticles from '@/components/FloatingParticles';
 import AuthGuard from '@/components/AuthGuard';
+import CommandPalette from '@/components/CommandPalette';
+import PageTransition from '@/components/PageTransition';
+import { ToastProvider } from '@/components/Toast';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,12 +35,18 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="h-screen flex flex-col bg-deep-0 text-soft-white overflow-hidden selection:bg-accent/30">
         <AuthGuard>
-          <AmbientBackground />
-          <div className="flex flex-1 overflow-hidden relative z-10">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto overflow-x-hidden">{children}</main>
-          </div>
-          <MobileNav />
+          <ToastProvider>
+            <AmbientBackground />
+            <FloatingParticles />
+            <CommandPalette />
+            <div className="flex flex-1 overflow-hidden relative z-10">
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto overflow-x-hidden">
+                <PageTransition>{children}</PageTransition>
+              </main>
+            </div>
+            <MobileNav />
+          </ToastProvider>
         </AuthGuard>
       </body>
     </html>

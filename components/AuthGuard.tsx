@@ -1,16 +1,17 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './AuthProvider';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Logo from './Logo';
+import SplashScreen from './SplashScreen';
 
 function AuthCheck({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const isLoginPage = pathname === '/login' || pathname.startsWith('/auth/');
+  const [showSplash, setShowSplash] = useState(true);
+  const [splashDone, setSplashDone] = useState(false);
 
   useEffect(() => {
     if (!loading && !user && !isLoginPage) {
@@ -24,25 +25,27 @@ function AuthCheck({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="h-screen bg-deep-0 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center gap-4"
-        >
-          <Logo size={44} showText={false} />
-          <div className="flex gap-1.5 mt-2">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                className="w-2 h-2 rounded-full bg-accent"
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15, ease: 'easeInOut' }}
-              />
-            ))}
-          </div>
-        </motion.div>
+        <div className="flex gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-2 h-2 rounded-full bg-accent"
+              style={{ animation: `pulse 0.8s ease-in-out ${i * 0.15}s infinite` }}
+            />
+          ))}
+        </div>
       </div>
+    );
+  }
+
+  if (user && !splashDone && showSplash) {
+    return (
+      <SplashScreen
+        onFinish={() => {
+          setShowSplash(false);
+          setSplashDone(true);
+        }}
+      />
     );
   }
 

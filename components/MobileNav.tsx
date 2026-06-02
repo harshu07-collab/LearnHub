@@ -1,13 +1,14 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { BookOpen, BarChart3, LogOut, Home } from 'lucide-react';
+import { BookOpen, BarChart3, LogOut, Home, Settings } from 'lucide-react';
 import { useAuth } from './AuthProvider';
 
 const items = [
   { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/' },
   { id: 'courses', label: 'Courses', icon: BookOpen, href: '/courses' },
   { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
+  { id: 'settings', label: 'Settings', icon: Settings, href: '/settings' },
 ];
 
 export default function MobileNav() {
