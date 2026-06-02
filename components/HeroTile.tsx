@@ -34,23 +34,33 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
     window.addEventListener('resize', resize);
 
     const draw = () => {
-      t += 0.003;
+      t += 0.002;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const w = canvas.width;
       const h = canvas.height;
 
+      // Slow-moving ambient orbs
       for (let i = 0; i < 3; i++) {
-        const x = w * (0.2 + i * 0.3) + Math.sin(t + i * 2) * 40;
-        const y = h * (0.3 + i * 0.2) + Math.cos(t * 0.7 + i * 1.5) * 30;
-        const r = 180 + Math.sin(t + i) * 30;
+        const x = w * (0.15 + i * 0.35) + Math.sin(t * 0.4 + i * 2.1) * 30;
+        const y = h * (0.25 + i * 0.25) + Math.cos(t * 0.3 + i * 1.6) * 25;
+        const r = 200 + Math.sin(t * 0.2 + i) * 20;
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
-        gradient.addColorStop(0, `rgba(99, 102, 241, ${0.12 - i * 0.03})`);
-        gradient.addColorStop(0.5, `rgba(139, 92, 246, ${0.06 - i * 0.02})`);
+        gradient.addColorStop(0, `rgba(99, 102, 241, ${0.1 - i * 0.025})`);
+        gradient.addColorStop(0.5, `rgba(139, 92, 246, ${0.05 - i * 0.015})`);
         gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, w, h);
       }
+
+      // Shimmer sweep line
+      const sweepX = ((t * 60) % (w + 200)) - 100;
+      const sweepGradient = ctx.createLinearGradient(sweepX, 0, sweepX + 150, 0);
+      sweepGradient.addColorStop(0, 'rgba(99, 102, 241, 0)');
+      sweepGradient.addColorStop(0.5, 'rgba(99, 102, 241, 0.04)');
+      sweepGradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+      ctx.fillStyle = sweepGradient;
+      ctx.fillRect(0, 0, w, h);
 
       animationId = requestAnimationFrame(draw);
     };
@@ -67,7 +77,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-deep-2 via-deep-2 to-deep-3 border border-border-1 min-h-[240px] md:min-h-[260px]"
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-deep-2 via-deep-2 to-deep-3 border border-border-1 min-h-[240px] md:min-h-[260px] group"
     >
       {/* Canvas background */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
@@ -75,8 +85,9 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
       {/* Grain */}
       <GrainOverlay opacity={0.025} />
 
-      {/* Glow */}
+      {/* Glow corners */}
       <div className="absolute -top-20 -right-20 w-72 h-72 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col justify-between h-full p-6 md:p-8">
@@ -130,8 +141,11 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
           transition={{ delay: 0.35, duration: 0.5 }}
           className="flex items-center gap-6 md:gap-8 mt-6"
         >
-          <motion.div className="flex items-center gap-2.5" whileHover={{ scale: 1.03 }}>
-            {/* Custom flame icon */}
+          <motion.div
+            className="flex items-center gap-2.5"
+            whileHover={{ scale: 1.05, y: -1 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+          >
             <svg
               viewBox="0 0 20 20"
               fill="none"
@@ -165,7 +179,11 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
 
           <div className="w-px h-8 bg-border-1" />
 
-          <motion.div className="flex items-center gap-2.5" whileHover={{ scale: 1.03 }}>
+          <motion.div
+            className="flex items-center gap-2.5"
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+          >
             <IconTarget className="w-4 h-4 text-accent-light" />
             <div className="flex items-baseline gap-1.5">
               <span className="text-sm font-medium text-soft-white">Advanced React</span>
@@ -175,7 +193,11 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
 
           <div className="w-px h-8 bg-border-1" />
 
-          <motion.div className="flex items-center gap-2" whileHover={{ scale: 1.03 }}>
+          <motion.div
+            className="flex items-center gap-2"
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+          >
             <IconTrendingUp className="w-4 h-4 text-emerald-400" />
             <span className="text-xs text-muted">
               +<AnimatedCounter to={12} suffix="%" duration={1} /> this week
@@ -187,10 +209,18 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
       {/* Animated border glow */}
       <motion.div
         className="absolute inset-0 rounded-2xl pointer-events-none"
-        animate={{ opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ opacity: [0.3, 0.7, 0.3] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         style={{
           boxShadow: 'inset 0 0 0 1px rgba(99, 102, 241, 0.15), 0 0 40px rgba(99, 102, 241, 0.05)',
+        }}
+      />
+
+      {/* Hover border glow */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          boxShadow: 'inset 0 0 0 1px rgba(99, 102, 241, 0.3), 0 0 60px rgba(99, 102, 241, 0.1)',
         }}
       />
     </motion.article>

@@ -72,6 +72,18 @@ export default function CourseCard({
         <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-purple-500/[0.05] to-transparent rounded-full blur-3xl" />
       </div>
 
+      {/* Shimmer sweep */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        initial={{ x: '-100%' }}
+        animate={{ x: '200%' }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'linear', repeatDelay: 5 }}
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.03) 50%, transparent 100%)',
+        }}
+      />
+
       {/* Hover spotlight */}
       <motion.div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500"

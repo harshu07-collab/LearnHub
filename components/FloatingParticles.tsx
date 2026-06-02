@@ -22,67 +22,53 @@ export default function GridBackground() {
     let time = 0;
 
     const draw = () => {
-      time += 0.001;
+      time += 0.002;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const w = canvas.width;
       const h = canvas.height;
-      const cellSize = 60;
+      const cellSize = 64;
 
       const cols = Math.ceil(w / cellSize);
       const rows = Math.ceil(h / cellSize);
 
       const cx = w / 2;
       const cy = h / 2;
-      const maxDist = Math.sqrt(cx * cx + cy * cy);
 
       ctx.lineWidth = 0.5;
 
+      // Horizontal lines — perfectly straight, no bending
       for (let row = 0; row <= rows; row++) {
+        const y = row * cellSize;
+        const dy = Math.abs(y - cy);
+        const intensity = 1 - Math.min(dy / cy, 1);
+        const alpha = intensity * intensity * 0.3;
+
+        // Subtle pulse on center lines only
+        const centerPulse = Math.max(0, 1 - dy / (cy * 0.4));
+        const pulse = 1 + Math.sin(time * 0.5 + row * 0.3) * 0.15 * centerPulse;
+
+        ctx.strokeStyle = `rgba(99, 102, 241, ${Math.max(0, alpha * pulse)})`;
         ctx.beginPath();
-        for (let col = 0; col <= cols; col++) {
-          const x = col * cellSize;
-          const y = row * cellSize;
-
-          const dx = x - cx;
-          const dy = y - cy;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const intensity = 1 - Math.min(dist / maxDist, 1);
-          const alpha = intensity * intensity * 0.35;
-          const wave = Math.sin((y + x) * 0.01 + time) * 0.15;
-
-          ctx.strokeStyle = `rgba(99, 102, 241, ${Math.max(0, alpha + wave * alpha)})`;
-
-          const px = x + Math.sin(time * 0.3 + y * 0.02) * 2;
-          const py = y + Math.cos(time * 0.25 + x * 0.02) * 2;
-
-          if (col === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
         ctx.stroke();
       }
 
+      // Vertical lines — perfectly straight, no bending
       for (let col = 0; col <= cols; col++) {
+        const x = col * cellSize;
+        const dx = Math.abs(x - cx);
+        const intensity = 1 - Math.min(dx / cx, 1);
+        const alpha = intensity * intensity * 0.3;
+
+        const centerPulse = Math.max(0, 1 - dx / (cx * 0.4));
+        const pulse = 1 + Math.sin(time * 0.5 + col * 0.3) * 0.15 * centerPulse;
+
+        ctx.strokeStyle = `rgba(99, 102, 241, ${Math.max(0, alpha * pulse)})`;
         ctx.beginPath();
-        for (let row = 0; row <= rows; row++) {
-          const x = col * cellSize;
-          const y = row * cellSize;
-
-          const dx = x - cx;
-          const dy = y - cy;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const intensity = 1 - Math.min(dist / maxDist, 1);
-          const alpha = intensity * intensity * 0.35;
-          const wave = Math.sin((x + y) * 0.01 + time) * 0.15;
-
-          ctx.strokeStyle = `rgba(99, 102, 241, ${Math.max(0, alpha + wave * alpha)})`;
-
-          const px = x + Math.sin(time * 0.3 + y * 0.02) * 2;
-          const py = y + Math.cos(time * 0.25 + x * 0.02) * 2;
-
-          if (row === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
         ctx.stroke();
       }
 
