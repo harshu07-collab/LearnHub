@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   IconZap,
@@ -15,6 +15,17 @@ import {
   IconAward,
 } from '@/components/CustomIcons';
 import GrainOverlay from '@/components/GrainOverlay';
+import AnimatedCounter from '@/components/AnimatedCounter';
+
+interface Sparkle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  maxLife: number;
+  size: number;
+}
 
 const achievements = [
   {
@@ -83,6 +94,74 @@ const achievements = [
   },
 ];
 
+function SparkleCanvas({ hovered, unlocked }: { hovered: boolean; unlocked: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<Sparkle[]>([]);
+  const animRef = useRef<number>(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const parts = particlesRef.current;
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const p = parts[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.02;
+        p.life++;
+        const alpha = Math.max(0, 1 - p.life / p.maxLife) * 0.4;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * (1 - (p.life / p.maxLife) * 0.5), 0, Math.PI * 2);
+        ctx.fillStyle = unlocked ? `rgba(251, 191, 36, ${alpha})` : `rgba(99, 102, 241, ${alpha})`;
+        ctx.fill();
+        if (p.life >= p.maxLife) parts.splice(i, 1);
+      }
+      animRef.current = requestAnimationFrame(draw);
+    };
+    animRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener('resize', resize);
+    };
+  }, [unlocked]);
+
+  useEffect(() => {
+    if (!hovered || !unlocked) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    for (let i = 0; i < 6; i++) {
+      particlesRef.current.push({
+        x: w * 0.5 + (Math.random() - 0.5) * 60,
+        y: h * 0.5 + (Math.random() - 0.5) * 60,
+        vx: (Math.random() - 0.5) * 2.5,
+        vy: -Math.random() * 2.5 - 0.5,
+        life: 0,
+        maxLife: 25 + Math.random() * 25,
+        size: 2 + Math.random() * 2,
+      });
+    }
+  }, [hovered, unlocked]);
+
+  return (
+    <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-20" />
+  );
+}
+
 export default function AchievementsPageClient() {
   const [hovered, setHovered] = useState<number | null>(null);
 
@@ -95,9 +174,13 @@ export default function AchievementsPageClient() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center"
+            >
               <IconAward className="w-5 h-5 text-amber-400" />
-            </div>
+            </motion.div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Achievements</h1>
               <p className="text-sm text-muted mt-1">Your learning milestones and badges</p>
@@ -107,24 +190,29 @@ export default function AchievementsPageClient() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { label: 'Total Badges', value: '8', color: 'text-amber-400', bg: 'bg-amber-500/10' },
-            { label: 'Unlocked', value: '3', color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-            { label: 'In Progress', value: '5', color: 'text-accent-light', bg: 'bg-accent/10' },
+            { label: 'Total Badges', value: 8, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+            { label: 'Unlocked', value: 3, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+            { label: 'In Progress', value: 5, color: 'text-accent-light', bg: 'bg-accent/10' },
           ].map((stat, idx) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
+              whileHover={{ scale: 1.02, y: -2 }}
               className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 overflow-hidden group"
             >
               <GrainOverlay opacity={0.03} />
-              <div
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                transition={{ type: 'spring', stiffness: 400, damping: 12 }}
                 className={`w-9 h-9 rounded-lg ${stat.bg} border border-border-1 flex items-center justify-center mb-3`}
               >
                 <IconTrophy className={`w-[18px] h-[18px] ${stat.color}`} />
+              </motion.div>
+              <div className="text-2xl font-bold text-soft-white">
+                <AnimatedCounter to={stat.value} duration={1.2} />
               </div>
-              <div className="text-2xl font-bold text-soft-white">{stat.value}</div>
               <div className="text-xs text-muted mt-0.5">{stat.label}</div>
             </motion.div>
           ))}
@@ -142,6 +230,7 @@ export default function AchievementsPageClient() {
               {achievements.map((ach, idx) => {
                 const Icon = ach.icon;
                 const unlocked = ach.progress >= 100;
+                const isHovered = hovered === idx;
                 return (
                   <motion.div
                     key={ach.name}
@@ -150,14 +239,17 @@ export default function AchievementsPageClient() {
                     transition={{ delay: 0.25 + idx * 0.04, duration: 0.3 }}
                     onMouseEnter={() => setHovered(idx)}
                     onMouseLeave={() => setHovered(null)}
+                    whileHover={unlocked ? { scale: 1.04, y: -3 } : { scale: 1.02 }}
                     className={`relative rounded-xl p-5 border text-center transition-all duration-300 ${
                       unlocked
                         ? `bg-gradient-to-br ${ach.bg} border-amber-500/20`
                         : 'bg-surface-2/50 border-border-1'
-                    } ${hovered === idx ? 'scale-[1.02]' : ''}`}
+                    }`}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
-                    {unlocked && hovered === idx && (
+                    <SparkleCanvas hovered={isHovered} unlocked={unlocked} />
+
+                    {unlocked && isHovered && (
                       <motion.div
                         className="absolute inset-0 rounded-xl pointer-events-none"
                         initial={{ opacity: 0 }}
@@ -167,6 +259,7 @@ export default function AchievementsPageClient() {
                         }}
                       />
                     )}
+
                     <div className="flex justify-center mb-3">
                       <svg
                         width="56"
@@ -217,21 +310,45 @@ export default function AchievementsPageClient() {
                         </text>
                       </svg>
                     </div>
-                    <div
+
+                    <motion.div
+                      animate={
+                        unlocked && isHovered
+                          ? { scale: 1.15, rotate: [0, -5, 5, 0] }
+                          : { scale: 1, rotate: 0 }
+                      }
+                      transition={{ type: 'spring', stiffness: 300, damping: 12 }}
                       className={`w-10 h-10 rounded-xl mx-auto mb-2.5 flex items-center justify-center ${unlocked ? 'bg-amber-500/10' : 'bg-surface-3'}`}
                     >
                       <Icon className={`w-5 h-5 ${unlocked ? ach.color : 'text-muted'}`} />
-                    </div>
+                    </motion.div>
+
                     <h4
                       className={`text-sm font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
                     >
                       {ach.name}
                     </h4>
                     <p className="text-[10px] text-subtle mt-0.5">{ach.desc}</p>
+
+                    {!unlocked && (
+                      <div className="mt-2 h-1 bg-surface-3 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${ach.progress}%` }}
+                          transition={{
+                            delay: 0.3 + idx * 0.04,
+                            duration: 1,
+                            ease: [0.25, 0.1, 0.25, 1],
+                          }}
+                          className="h-full rounded-full bg-accent/50"
+                        />
+                      </div>
+                    )}
+
                     {unlocked && (
                       <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        animate={{ opacity: 1, scale: isHovered ? 1.1 : 1 }}
                         className="text-[10px] text-amber-400 font-semibold mt-2 block"
                       >
                         Unlocked

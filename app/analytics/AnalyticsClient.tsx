@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import {
   IconBookOpen,
@@ -19,49 +19,56 @@ import {
   IconBarChart,
 } from '@/components/CustomIcons';
 import GrainOverlay from '@/components/GrainOverlay';
+import AnimatedCounter from '@/components/AnimatedCounter';
 
 const statCards = [
   {
     label: 'Total Courses',
-    value: '4',
+    value: 4,
     icon: IconBookOpen,
     color: 'text-accent-light',
     bg: 'bg-accent/10',
+    suffix: '',
   },
   {
     label: 'Day Streak',
-    value: '7',
+    value: 7,
     icon: IconFlame,
     color: 'text-orange-400',
     bg: 'bg-orange-500/10',
+    suffix: '',
   },
   {
     label: 'Avg Progress',
-    value: '65%',
+    value: 65,
     icon: IconTrendingUp,
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/10',
+    suffix: '%',
   },
   {
     label: 'Hours Learned',
-    value: '28',
+    value: 28,
     icon: IconClock,
     color: 'text-purple-400',
     bg: 'bg-purple-500/10',
+    suffix: '',
   },
   {
     label: 'Achievements',
-    value: '5',
+    value: 5,
     icon: IconTrophy,
     color: 'text-amber-400',
     bg: 'bg-amber-500/10',
+    suffix: '',
   },
   {
     label: 'Focus Score',
-    value: '82',
+    value: 82,
     icon: IconTarget,
     color: 'text-cyan-400',
     bg: 'bg-cyan-500/10',
+    suffix: '',
   },
 ];
 
@@ -188,23 +195,70 @@ function StatCard({ stat, idx }: { stat: (typeof statCards)[0]; idx: number }) {
         }}
       />
       <div className="relative z-10" style={{ transform: 'translateZ(20px)' }}>
-        <div
+        <motion.div
+          whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
+          transition={{ type: 'spring', stiffness: 400, damping: 12 }}
           className={`w-8 h-8 rounded-lg ${stat.bg} border border-border-1 flex items-center justify-center mb-2.5`}
         >
           <Icon className={`w-4 h-4 ${stat.color}`} />
-        </div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 + idx * 0.05, duration: 0.4 }}
-          className="text-xl font-bold text-soft-white"
-        >
-          {stat.value}
         </motion.div>
+        <AnimatedCounter
+          to={stat.value}
+          suffix={stat.suffix}
+          className="text-xl font-bold text-soft-white"
+          duration={1.2}
+        />
         <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
       </div>
     </motion.div>
   );
+}
+
+function ChartSparkles() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let id: number;
+    let t = 0;
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const draw = () => {
+      t += 0.005;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Floating sparkles
+      for (let i = 0; i < 4; i++) {
+        const x = (t * 15 + i * 90) % w;
+        const y = 30 + Math.sin(t + i * 1.7) * 15;
+        const a = 0.04 + Math.sin(t * 2 + i) * 0.02;
+        ctx.beginPath();
+        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(99, 102, 241, ${a})`;
+        ctx.fill();
+      }
+
+      id = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />;
 }
 
 function RadialChart({ size = 160 }: { size?: number }) {
@@ -238,7 +292,6 @@ function RadialChart({ size = 160 }: { size?: number }) {
             key={cat.label}
             d={`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`}
             fill="none"
-            className={cat.bg.replace('bg-', 'fill-')}
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ delay: idx * 0.15, duration: 0.5 }}
@@ -285,11 +338,12 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
       transition={{ delay: 0.35 + idx * 0.04, duration: 0.3 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      whileHover={{ scale: 1.04, y: -2 }}
       className={`relative rounded-xl p-4 border text-center transition-all duration-300 cursor-default ${
         unlocked
           ? 'bg-gradient-to-br from-amber-500/5 to-orange-500/5 border-amber-500/20'
           : 'bg-surface-2 border-border-1 opacity-50'
-      } ${hovered ? 'scale-[1.03]' : ''}`}
+      }`}
       style={{ transformStyle: 'preserve-3d' }}
     >
       {unlocked && hovered && (
@@ -302,11 +356,15 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
           }}
         />
       )}
-      <div
+      <motion.div
+        animate={
+          unlocked && hovered ? { scale: 1.15, rotate: [0, -5, 5, 0] } : { scale: 1, rotate: 0 }
+        }
+        transition={{ type: 'spring', stiffness: 300, damping: 12 }}
         className={`w-10 h-10 rounded-xl mx-auto mb-2.5 flex items-center justify-center ${unlocked ? 'bg-amber-500/10' : 'bg-surface-3'}`}
       >
         <Icon className={`w-5 h-5 ${unlocked ? ach.color : 'text-muted'}`} />
-      </div>
+      </motion.div>
       <h4 className={`text-xs font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}>
         {ach.name}
       </h4>
@@ -324,7 +382,7 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
       {unlocked && (
         <motion.span
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 1, scale: hovered ? 1.1 : 1 }}
           className="text-[9px] text-amber-400 font-medium mt-1.5 block"
         >
           Unlocked
@@ -344,9 +402,13 @@ export default function AnalyticsClient() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center"
+            >
               <IconBarChart className="w-5 h-5 text-accent-light" />
-            </div>
+            </motion.div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Analytics</h1>
               <p className="text-sm text-muted mt-1">Your learning journey at a glance</p>
@@ -368,8 +430,14 @@ export default function AnalyticsClient() {
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden group"
           >
             <GrainOverlay opacity={0.03} />
+            <ChartSparkles />
             <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-              <IconClock className="w-4 h-4 text-accent-light" />
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <IconClock className="w-4 h-4 text-accent-light" />
+              </motion.div>
               Weekly Study Time
             </h3>
             <div className="flex items-end justify-between gap-2 h-40">
@@ -429,10 +497,19 @@ export default function AnalyticsClient() {
             </div>
             <div className="space-y-3">
               {categoryData.map((cat, idx) => (
-                <div key={cat.label}>
+                <motion.div
+                  key={cat.label}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + idx * 0.1, duration: 0.4 }}
+                >
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${cat.bg}`} />
+                      <motion.span
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                        className={`w-2 h-2 rounded-full ${cat.bg}`}
+                      />
                       <span className="text-xs text-muted">{cat.label}</span>
                     </div>
                     <span className="text-xs font-semibold text-soft-white">{cat.value}%</span>
@@ -451,7 +528,7 @@ export default function AnalyticsClient() {
                       <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                     </motion.div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>

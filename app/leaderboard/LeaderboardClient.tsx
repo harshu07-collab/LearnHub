@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { IconTrophy, IconStar, IconLeaderboard, IconFlame } from '@/components/CustomIcons';
 import GrainOverlay from '@/components/GrainOverlay';
+import AnimatedCounter from '@/components/AnimatedCounter';
 
 interface Leader {
   rank: number;
@@ -160,7 +161,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
         {isTop3 ? (
           <motion.span
             className={`text-lg font-bold ${rankColors[idx]}`}
-            animate={hovered ? { scale: 1.15 } : { scale: 1 }}
+            animate={hovered ? { scale: 1.2, rotate: [0, -5, 5, 0] } : { scale: 1 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
             {leader.rank}
@@ -173,7 +174,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
             className="w-4 h-4"
             viewBox="0 0 16 16"
             fill="none"
-            animate={hovered ? { rotate: 15, scale: 1.2 } : { rotate: 0, scale: 1 }}
+            animate={hovered ? { rotate: 15, scale: 1.3 } : { rotate: 0, scale: 1 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
             <path
@@ -190,7 +191,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
       {/* Name */}
       <div className="col-span-5 md:col-span-4 flex items-center gap-3 relative z-10">
         <motion.div
-          animate={hovered ? { scale: 1.1 } : { scale: 1 }}
+          animate={hovered ? { scale: 1.15 } : { scale: 1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
             leader.isCurrentUser
@@ -221,20 +222,20 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
         </div>
       </div>
 
-      {/* Points */}
+      {/* Points with AnimatedCounter */}
       <div className="col-span-3 md:col-span-2 text-right relative z-10">
         <motion.span
-          className="text-sm font-semibold text-soft-white"
+          className="text-sm font-semibold text-soft-white inline-block"
           animate={hovered ? { scale: 1.05 } : { scale: 1 }}
         >
-          {leader.points.toLocaleString()}
+          <AnimatedCounter to={leader.points} duration={1.5} />
         </motion.span>
       </div>
 
       {/* Streak */}
       <div className="hidden md:flex col-span-2 items-center justify-end gap-1.5 relative z-10">
         <motion.div
-          animate={hovered ? { scale: 1.15, rotate: -10 } : { scale: 1, rotate: 0 }}
+          animate={hovered ? { scale: 1.2, rotate: -15 } : { scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 12 }}
         >
           <IconFlame className="w-3.5 h-3.5 text-orange-400" />
@@ -244,15 +245,20 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
 
       {/* Courses */}
       <div className="hidden md:block col-span-2 text-right relative z-10">
-        <span className="text-sm text-muted">{leader.courses}</span>
+        <motion.span
+          className="text-sm text-muted inline-block"
+          animate={hovered ? { scale: 1.05 } : { scale: 1 }}
+        >
+          {leader.courses}
+        </motion.span>
       </div>
 
       {/* Badge */}
       <div className="hidden md:block col-span-1 text-right relative z-10">
         {isTop3 && idx === 0 && (
           <motion.span
-            className="text-[10px] text-amber-400 font-semibold"
-            animate={hovered ? { scale: 1.1 } : { scale: 1 }}
+            className="text-[10px] text-amber-400 font-semibold inline-block"
+            animate={hovered ? { scale: 1.15 } : { scale: 1 }}
           >
             Leader
           </motion.span>
@@ -266,16 +272,19 @@ export default function LeaderboardPageClient() {
   return (
     <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center"
+            >
               <IconLeaderboard className="w-5 h-5 text-accent-light" />
-            </div>
+            </motion.div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-soft-white">Leaderboard</h1>
               <p className="text-sm text-muted mt-1">Top learners this month</p>
@@ -283,29 +292,32 @@ export default function LeaderboardPageClient() {
           </div>
         </motion.div>
 
-        {/* Stat cards with cursor tilt */}
+        {/* Stat cards */}
         <div className="grid grid-cols-3 gap-3">
           {[
             {
               label: 'Your Rank',
-              value: '#7',
+              value: 7,
               icon: IconStar,
               color: 'text-accent-light',
               bg: 'bg-accent/10',
+              suffix: '',
             },
             {
               label: 'Total Points',
-              value: '1,280',
+              value: 1280,
               icon: IconTrophy,
               color: 'text-amber-400',
               bg: 'bg-amber-500/10',
+              suffix: '',
             },
             {
               label: 'Day Streak',
-              value: '7',
+              value: 7,
               icon: IconFlame,
               color: 'text-orange-400',
               bg: 'bg-orange-500/10',
+              suffix: '',
             },
           ].map((stat, idx) => {
             const StatIcon = stat.icon;
@@ -331,7 +343,18 @@ export default function LeaderboardPageClient() {
                 >
                   <StatIcon className={`w-4 h-4 ${stat.color}`} />
                 </div>
-                <div className="text-xl font-bold text-soft-white relative z-10">{stat.value}</div>
+                <div className="relative z-10">
+                  {stat.label === 'Your Rank' ? (
+                    <span className="text-xl font-bold text-soft-white">#{stat.value}</span>
+                  ) : (
+                    <AnimatedCounter
+                      to={stat.value}
+                      suffix={stat.suffix}
+                      className="text-xl font-bold text-soft-white"
+                      duration={1.2}
+                    />
+                  )}
+                </div>
                 <div className="text-[10px] text-muted mt-0.5 relative z-10">{stat.label}</div>
               </motion.div>
             );
@@ -347,7 +370,6 @@ export default function LeaderboardPageClient() {
         >
           <GrainOverlay opacity={0.03} />
           <div className="relative z-10">
-            {/* Header row */}
             <div className="hidden md:grid grid-cols-12 gap-4 px-5 py-3 border-b border-border-1">
               <span className="col-span-1 text-[10px] text-subtle font-semibold uppercase tracking-widest">
                 Rank

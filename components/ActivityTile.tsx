@@ -1,8 +1,10 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { IconTrendingUp, IconActivity } from './CustomIcons';
 import GrainOverlay from './GrainOverlay';
+import AnimatedCounter from './AnimatedCounter';
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -23,6 +25,73 @@ const tileVariants = {
 };
 
 export default function ActivityTile() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [hoverBar, setHoverBar] = useState<number | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationId: number;
+    let t = 0;
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const draw = () => {
+      t += 0.008;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Sparkline wave across bottom
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      for (let x = 0; x <= w; x += 2) {
+        const y = h - 20 + Math.sin(x * 0.03 + t) * 6 + Math.sin(x * 0.07 + t * 1.3) * 3;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(99, 102, 241, 0.03)';
+      ctx.fill();
+
+      // Pulsing glow dot on sparkline peak
+      const peakX = (t * 30) % w;
+      const peakY = h - 20 + Math.sin(peakX * 0.03 + t) * 6 + Math.sin(peakX * 0.07 + t * 1.3) * 3;
+      const glowR = 8 + Math.sin(t * 2) * 3;
+      const dotGrad = ctx.createRadialGradient(peakX, peakY, 0, peakX, peakY, glowR);
+      dotGrad.addColorStop(0, 'rgba(99, 102, 241, 0.15)');
+      dotGrad.addColorStop(1, 'rgba(99, 102, 241, 0)');
+      ctx.fillStyle = dotGrad;
+      ctx.fillRect(peakX - glowR, peakY - glowR, glowR * 2, glowR * 2);
+
+      // Floating dots
+      for (let i = 0; i < 3; i++) {
+        const fx = (t * 20 + i * 80) % w;
+        const fy = 20 + Math.sin(t + i * 2) * 10;
+        ctx.beginPath();
+        ctx.arc(fx, fy, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(99, 102, 241, ${0.06 + Math.sin(t + i) * 0.03})`;
+        ctx.fill();
+      }
+
+      animationId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
   return (
     <motion.article
       variants={tileVariants}
@@ -30,22 +99,35 @@ export default function ActivityTile() {
       animate="visible"
       className="relative h-full rounded-xl bg-gradient-to-br from-surface-1 via-surface-2 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden group"
     >
-      {/* Grain texture */}
       <GrainOverlay opacity={0.03} />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 
-      {/* Background mesh */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute -top-1/3 -right-1/3 w-72 h-72 bg-emerald-500/[0.06] rounded-full blur-3xl" />
         <div className="absolute -bottom-1/3 -left-1/3 w-72 h-72 bg-blue-500/[0.04] rounded-full blur-3xl" />
       </div>
 
+      <motion.div
+        className="absolute inset-0 rounded-xl pointer-events-none"
+        animate={{ opacity: [0, 0.025, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.04) 50%, transparent 100%)',
+        }}
+      />
+
       <div className="relative z-10 flex flex-col h-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/10 flex items-center justify-center">
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/10 flex items-center justify-center"
+            >
               <IconActivity className="w-4 h-4 text-accent-light" />
-            </div>
+            </motion.div>
             <div>
               <h3 className="text-sm font-semibold text-soft-white">Weekly Activity</h3>
               <p className="text-[10px] text-subtle">Your learning streak</p>
@@ -57,10 +139,32 @@ export default function ActivityTile() {
             transition={{ delay: 0.3, type: 'spring', stiffness: 200, damping: 15 }}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/15"
           >
-            <IconTrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <IconTrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            </motion.div>
             <span className="text-[11px] font-semibold text-emerald-400">+{avg}</span>
           </motion.div>
         </div>
+
+        {/* Pulsing live indicator */}
+        <motion.div
+          className="flex items-center gap-1.5 mb-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <motion.span
+            className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+            animate={{ opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <span className="text-[9px] text-emerald-400/70 font-medium uppercase tracking-widest">
+            Live
+          </span>
+        </motion.div>
 
         {/* Chart */}
         <div className="flex-1 flex flex-col justify-center">
@@ -71,12 +175,13 @@ export default function ActivityTile() {
                 <motion.div
                   key={idx}
                   className="flex-1 flex flex-col items-center gap-1.5 group/bar"
+                  onMouseEnter={() => setHoverBar(idx)}
+                  onMouseLeave={() => setHoverBar(null)}
                 >
                   <motion.div
                     initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 + idx * 0.06, duration: 0.3 }}
-                    className="opacity-0 group-hover/bar:opacity-100 transition-opacity duration-200"
+                    animate={{ opacity: hoverBar === idx ? 1 : 0, y: hoverBar === idx ? 0 : 5 }}
+                    transition={{ duration: 0.2 }}
                   >
                     <span className="text-[10px] font-medium text-accent-light">{value}</span>
                   </motion.div>
@@ -93,6 +198,16 @@ export default function ActivityTile() {
                     style={{ minHeight: 4 }}
                   >
                     <motion.div className="absolute inset-0 rounded-t-md bg-gradient-to-t from-transparent via-white/15 to-transparent opacity-0 group-hover/bar:opacity-100 transition-opacity duration-200" />
+                    {hoverBar === idx && (
+                      <motion.div
+                        className="absolute -top-1 -left-1 -right-1 -bottom-1 rounded-t-md pointer-events-none"
+                        layoutId="bar-glow"
+                        style={{
+                          boxShadow:
+                            '0 0 12px rgba(99, 102, 241, 0.3), 0 0 30px rgba(99, 102, 241, 0.1)',
+                        }}
+                      />
+                    )}
                   </motion.div>
                 </motion.div>
               );
@@ -127,15 +242,23 @@ export default function ActivityTile() {
             { label: 'Average', value: avg, color: 'text-purple-400' },
             { label: 'Peak', value: maxVal, color: 'text-emerald-400' },
           ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className={`text-lg font-bold ${stat.color}`}>{stat.value}</div>
+            <motion.div
+              key={stat.label}
+              className="text-center"
+              whileHover={{ scale: 1.08, y: -2 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+            >
+              <AnimatedCounter
+                to={stat.value}
+                className={`text-lg font-bold ${stat.color}`}
+                duration={1.2}
+              />
               <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>
 
-      {/* Hover border glow */}
       <motion.div
         className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{

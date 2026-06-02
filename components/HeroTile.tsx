@@ -8,6 +8,15 @@ import GrainOverlay from './GrainOverlay';
 import TypewriterText from './TypewriterText';
 import AnimatedCounter from './AnimatedCounter';
 
+interface Sparkle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  maxLife: number;
+  size: number;
+}
 interface HeroTileProps {
   userName?: string;
 }
@@ -25,6 +34,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
 
     let animationId: number;
     let t = 0;
+    const sparkles: Sparkle[] = [];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth;
@@ -36,21 +46,34 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
     const draw = () => {
       t += 0.002;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       const w = canvas.width;
       const h = canvas.height;
 
       // Slow-moving ambient orbs
       for (let i = 0; i < 3; i++) {
-        const x = w * (0.15 + i * 0.35) + Math.sin(t * 0.4 + i * 2.1) * 30;
-        const y = h * (0.25 + i * 0.25) + Math.cos(t * 0.3 + i * 1.6) * 25;
-        const r = 200 + Math.sin(t * 0.2 + i) * 20;
+        const x = w * (0.1 + i * 0.4) + Math.sin(t * 0.4 + i * 2.1) * 35;
+        const y = h * (0.2 + i * 0.3) + Math.cos(t * 0.3 + i * 1.6) * 30;
+        const r = 220 + Math.sin(t * 0.2 + i) * 25;
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
         gradient.addColorStop(0, `rgba(99, 102, 241, ${0.1 - i * 0.025})`);
         gradient.addColorStop(0.5, `rgba(139, 92, 246, ${0.05 - i * 0.015})`);
         gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, w, h);
+      }
+
+      // Orbital ring arc
+      for (let ring = 0; ring < 2; ring++) {
+        const cx = w * 0.75 + ring * 20;
+        const cy = h * 0.3;
+        const radius = 40 + ring * 15;
+        const startAngle = t * 0.5 + ring * Math.PI;
+        const endAngle = startAngle + Math.PI * 0.6;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.strokeStyle = `rgba(99, 102, 241, ${0.06 + ring * 0.02})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
       }
 
       // Shimmer sweep line
@@ -61,6 +84,31 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
       sweepGradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
       ctx.fillStyle = sweepGradient;
       ctx.fillRect(0, 0, w, h);
+
+      // Sparkle particles
+      if (Math.random() < 0.15) {
+        sparkles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: -Math.random() * 0.6 - 0.2,
+          life: 0,
+          maxLife: 60 + Math.random() * 60,
+          size: 1 + Math.random() * 1.5,
+        });
+      }
+      for (let i = sparkles.length - 1; i >= 0; i--) {
+        const s = sparkles[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.life++;
+        const alpha = Math.max(0, 1 - s.life / s.maxLife) * 0.6;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size * (1 - (s.life / s.maxLife) * 0.5), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(196, 181, 253, ${alpha})`;
+        ctx.fill();
+        if (s.life >= s.maxLife) sparkles.splice(i, 1);
+      }
 
       animationId = requestAnimationFrame(draw);
     };
@@ -79,19 +127,13 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
       transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
       className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-deep-2 via-deep-2 to-deep-3 border border-border-1 min-h-[240px] md:min-h-[260px] group"
     >
-      {/* Canvas background */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-
-      {/* Grain */}
       <GrainOverlay opacity={0.025} />
 
-      {/* Glow corners */}
       <div className="absolute -top-20 -right-20 w-72 h-72 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Content */}
       <div className="relative z-10 flex flex-col justify-between h-full p-6 md:p-8">
-        {/* Top */}
         <div>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -99,6 +141,11 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
             transition={{ delay: 0.15, duration: 0.5 }}
             className="flex items-center gap-2 mb-4"
           >
+            <motion.span
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+            />
             <span className="text-[10px] font-medium text-subtle tracking-widest uppercase">
               Dashboard
             </span>
@@ -134,7 +181,6 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
           </motion.p>
         </div>
 
-        {/* Bottom stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -143,29 +189,34 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
         >
           <motion.div
             className="flex items-center gap-2.5"
-            whileHover={{ scale: 1.05, y: -1 }}
+            whileHover={{ scale: 1.08, y: -2 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
-            <svg
-              viewBox="0 0 20 20"
-              fill="none"
-              className="w-5 h-5 text-orange-400"
-              aria-label="Streak"
+            <motion.div
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <path
-                d="M10 3C7 7 6 9.5 6 11.5C6 13.5 7.5 16 10 16C12.5 16 14 13.5 14 11.5C14 9.5 13 7 10 3Z"
-                stroke="currentColor"
-                strokeWidth="1.3"
+              <svg
+                viewBox="0 0 20 20"
                 fill="none"
-              />
-              <path
-                d="M8 11C8.5 9 10 8.5 10 8.5C10 8.5 9.5 10 10 11C10.5 12 9.5 13 9 13"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-                fill="none"
-              />
-            </svg>
+                className="w-5 h-5 text-orange-400"
+                aria-label="Streak"
+              >
+                <path
+                  d="M10 3C7 7 6 9.5 6 11.5C6 13.5 7.5 16 10 16C12.5 16 14 13.5 14 11.5C14 9.5 13 7 10 3Z"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  fill="none"
+                />
+                <path
+                  d="M8 11C8.5 9 10 8.5 10 8.5C10 8.5 9.5 10 10 11C10.5 12 9.5 13 9 13"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              </svg>
+            </motion.div>
             <div className="flex items-baseline gap-1.5">
               <AnimatedCounter
                 to={7}
@@ -181,10 +232,15 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
 
           <motion.div
             className="flex items-center gap-2.5"
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.05 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
-            <IconTarget className="w-4 h-4 text-accent-light" />
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <IconTarget className="w-4 h-4 text-accent-light" />
+            </motion.div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-sm font-medium text-soft-white">Advanced React</span>
               <span className="text-xs text-muted">current focus</span>
@@ -195,7 +251,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
 
           <motion.div
             className="flex items-center gap-2"
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.05 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           >
             <IconTrendingUp className="w-4 h-4 text-emerald-400" />
@@ -206,7 +262,7 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
         </motion.div>
       </div>
 
-      {/* Animated border glow */}
+      {/* Animated gradient border — rotates hue */}
       <motion.div
         className="absolute inset-0 rounded-2xl pointer-events-none"
         animate={{ opacity: [0.3, 0.7, 0.3] }}
@@ -216,7 +272,6 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
         }}
       />
 
-      {/* Hover border glow */}
       <motion.div
         className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
