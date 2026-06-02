@@ -24,13 +24,47 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
   const filtered = useMemo(() => {
     return initialCourses.filter((c) => {
       const matchSearch = c.title.toLowerCase().includes(search.toLowerCase());
-      const catMap: Record<string, string> = {
-        Frontend: 'react',
-        'AI/ML': 'ai',
-        Cloud: 'cloud',
-        Design: 'design',
+      const catKeywords: Record<string, string[]> = {
+        Frontend: [
+          'typescript',
+          'react',
+          'web',
+          'css',
+          'javascript',
+          'html',
+          'ui',
+          'ux',
+          'frontend',
+          'mobile',
+        ],
+        'AI/ML': [
+          'ai',
+          'machine',
+          'data science',
+          'python',
+          'neural',
+          'brain',
+          'intelligence',
+          'system design',
+        ],
+        Cloud: [
+          'cloud',
+          'aws',
+          'azure',
+          'devops',
+          'ci/cd',
+          'ci',
+          'cd',
+          'deployment',
+          'infrastructure',
+          'security',
+          'cyber',
+        ],
+        Design: ['design', 'palette', 'figma', 'ui', 'ux', 'graphic'],
       };
-      const matchCat = category === 'All' || c.title.toLowerCase().includes(catMap[category] || '');
+      if (category === 'All') return matchSearch;
+      const keywords = catKeywords[category] || [];
+      const matchCat = keywords.some((kw) => c.title.toLowerCase().includes(kw));
       return matchSearch && matchCat;
     });
   }, [initialCourses, search, category]);
