@@ -154,8 +154,6 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
             </motion.div>
           </motion.div>
         </div>
-
-        {/* 3D knowledge gem */}
       </div>
 
       {/* Animated gradient border — rotates hue */}
