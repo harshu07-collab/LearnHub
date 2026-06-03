@@ -1,8 +1,9 @@
 import React from 'react';
 import { fetchCourses } from '@/lib/supabase.server';
 import CourseList from './CourseList';
+import type { Course } from '@/types';
 
-const fallbackCourses = [
+const fallbackCourses: Course[] = [
   { id: '1', title: 'TypeScript Mastery', icon_name: 'Code', progress: 75 },
   { id: '2', title: 'System Design & Architecture', icon_name: 'Brain', progress: 52 },
   { id: '3', title: 'Cloud Architecture with AWS', icon_name: 'Cloud', progress: 88 },
@@ -13,7 +14,7 @@ const fallbackCourses = [
   { id: '8', title: 'DevOps & CI/CD Pipelines', icon_name: 'Cloud', progress: 15 },
 ];
 
-async function getCourses(): Promise<{ courses: typeof fallbackCourses; isOffline: boolean }> {
+async function getCourses(): Promise<{ courses: Course[]; isOffline: boolean }> {
   try {
     const courses = await fetchCourses();
     return { courses, isOffline: false };
