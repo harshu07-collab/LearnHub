@@ -1,6 +1,6 @@
 export default function ProfileLoading() {
   return (
-    <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
+    <div className="p-4 md:p-6 lg:p-8 pb-6 lg:pb-8 min-h-full">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Hero skeleton */}
         <div className="rounded-2xl bg-deep-2 border border-border-1 min-h-[200px] p-6 md:p-8 contain-layout">

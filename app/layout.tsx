@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Bricolage_Grotesque, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Sidebar from '@/components/Sidebar';
-import MobileNav from '@/components/MobileNav';
 import AmbientBackground from '@/components/AmbientBackground';
 import FloatingParticles from '@/components/FloatingParticles';
 import AuthGuard from '@/components/AuthGuard';
@@ -49,7 +48,6 @@ export default function RootLayout({
                 <PageTransition>{children}</PageTransition>
               </main>
             </div>
-            <MobileNav />
           </ToastProvider>
         </AuthGuard>
       </body>

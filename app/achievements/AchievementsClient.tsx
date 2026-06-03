@@ -166,7 +166,7 @@ export default function AchievementsPageClient() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
+    <div className="p-4 md:p-6 lg:p-8 pb-6 lg:pb-8 min-h-full">
       <div className="max-w-7xl mx-auto space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

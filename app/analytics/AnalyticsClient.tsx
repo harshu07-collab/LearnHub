@@ -236,7 +236,6 @@ function ChartSparkles() {
       t += 0.005;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const w = canvas.width;
-      const h = canvas.height;
 
       // Floating sparkles
       for (let i = 0; i < 4; i++) {
@@ -394,7 +393,7 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
 
 export default function AnalyticsClient() {
   return (
-    <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
+    <div className="p-4 md:p-6 lg:p-8 pb-6 lg:pb-8 min-h-full">
       <div className="max-w-7xl mx-auto space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

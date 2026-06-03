@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { IconTrophy, IconStar, IconLeaderboard, IconFlame } from '@/components/CustomIcons';
 import GrainOverlay from '@/components/GrainOverlay';
@@ -270,7 +270,7 @@ function LeaderRow({ leader, idx }: { leader: Leader; idx: number }) {
 
 export default function LeaderboardPageClient() {
   return (
-    <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
+    <div className="p-4 md:p-6 lg:p-8 pb-6 lg:pb-8 min-h-full">
       <div className="max-w-5xl mx-auto space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

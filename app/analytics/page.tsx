@@ -3,7 +3,7 @@ import AnalyticsClient from './AnalyticsClient';
 
 function AnalyticsSkeleton() {
   return (
-    <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
+    <div className="p-4 md:p-6 lg:p-8 pb-6 lg:pb-8 min-h-full">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl skeleton-shimmer" />
