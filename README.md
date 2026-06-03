@@ -137,6 +137,23 @@ npm start          # Start production server
 - **Fallback data**: If Supabase is unreachable, course data renders from hardcoded defaults to prevent blank screen.
 - **Custom logo**: Abstract geometric mark with two overlapping wings + center spine — represents continuous learning. Not an AI-generated icon.
 
+## Challenges Faced
+
+### 1. RLS (Row Level Security) Permission Denied on Server
+Initially, I tried using the `SUPABASE_SERVICE_ROLE_KEY` for server-side data fetching to avoid exposing the anon key. However, Vercel production builds failed with `permission denied for table courses` because the service role lacked `SELECT` privileges on the `courses` table. I resolved this by switching back to the `NEXT_PUBLIC_SUPABASE_ANON_KEY` on the server, which is the standard pattern for Supabase RLS-enabled tables. I then added the necessary RLS policies in Supabase to allow `anon` and `authenticated` roles to read the `courses` table.
+
+### 2. TypeScript Type Mismatch with Shared Interfaces
+When I refactored `CourseListServer.tsx` to use the shared `Course` type from `@/types`, I encountered a type mismatch. The `fallbackCourses` array was typed with required fields (`icon_name: string`, `progress: number`), while the shared `Course` interface had optional fields (`icon_name?: string`, `progress?: number`). I fixed this by explicitly typing `fallbackCourses` as `Course[]` and updating the `getCourses()` return type to use `Course[]` instead of `typeof fallbackCourses`.
+
+### 3. Zero Layout Shifts with Framer Motion
+The challenge required "zero layout shifts" for hover and entrance animations. Using `AnimatePresence mode="wait"` caused a brief blank gap between page transitions (CLS). I fixed this by switching to `mode="popLayout"` with `initial={false}`, which crossfades pages without ever collapsing the layout container. I also added `contain: layout style` to key containers to isolate reflows.
+
+### 4. Performance: Mouse Move Causing Excessive Re-renders
+`CourseCard` and `CursorGlow` were using `useState` to track mouse position, triggering a React re-render on every `mousemove` event (60+ times per second). I eliminated this by using CSS custom properties (`--spot-x`, `--spot-y`) and direct DOM manipulation via `useRef` + `requestAnimationFrame`, bringing the component to zero re-renders during mouse interaction.
+
+### 5. Canvas Animations Running at 60fps Unnecessarily
+The ambient canvas backgrounds (`AmbientBackground`, `FloatingParticles`, `ActivityTile`) were rendering at 60fps, which is overkill for decorative effects and wastes GPU/battery. I implemented frame-delta throttling to cap them at 30fps, halving the GPU cost without any visible quality loss.
+
 ## Project Structure
 
 ```
