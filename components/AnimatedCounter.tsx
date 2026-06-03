@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useInView } from 'framer-motion';
 
 interface AnimatedCounterProps {
   from?: number;
@@ -10,6 +10,7 @@ interface AnimatedCounterProps {
   suffix?: string;
   className?: string;
   duration?: number;
+  delay?: number;
 }
 
 export default function AnimatedCounter({
@@ -19,40 +20,44 @@ export default function AnimatedCounter({
   suffix = '',
   className = '',
   duration = 1.5,
+  delay = 0,
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
+  const startedRef = useRef(false);
   const inView = useInView(ref, { once: true, margin: '-50px' });
   const [display, setDisplay] = useState(from);
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || startedRef.current) return;
+    startedRef.current = true;
 
-    const startTime = performance.now();
-    const range = to - from;
+    const delayTimer = setTimeout(() => {
+      const startTime = performance.now();
+      const range = to - from;
 
-    const update = (now: number) => {
-      const elapsed = (now - startTime) / 1000;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease out quart
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(from + range * eased));
-      if (progress < 1) requestAnimationFrame(update);
-    };
+      const update = (now: number) => {
+        const elapsed = (now - startTime) / 1000;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setDisplay(Math.round(from + range * eased));
+        if (progress < 1) requestAnimationFrame(update);
+      };
 
-    requestAnimationFrame(update);
-  }, [inView, from, to, duration]);
+      requestAnimationFrame(update);
+    }, delay * 1000);
+
+    return () => clearTimeout(delayTimer);
+  }, [inView, from, to, duration, delay]);
 
   return (
-    <motion.span
+    <span
       ref={ref}
-      initial={{ opacity: 0, y: 10 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4 }}
       className={className}
+      style={{ animation: `fadeSlideUp 0.4s ${delay}s ease-out both` }}
     >
       {prefix}
       {display}
       {suffix}
-    </motion.span>
+    </span>
   );
 }

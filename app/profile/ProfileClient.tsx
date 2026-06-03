@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import {
   IconTrophy,
   IconFlame,
@@ -212,8 +211,9 @@ function ChartSparkles() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     let id: number;
+    let frame = 0;
 
-    const start = () => {
+    const timer = setTimeout(() => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       let t = 0;
@@ -226,12 +226,16 @@ function ChartSparkles() {
       window.addEventListener('resize', resize);
 
       const draw = () => {
+        frame++;
+        if (frame % 2 !== 0) {
+          id = requestAnimationFrame(draw);
+          return;
+        }
         t += 0.005;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const w = canvas.width;
-        const h = canvas.height;
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
           const x = (t * 15 + i * 90) % w;
           const y = 30 + Math.sin(t + i * 1.7) * 15;
           const a = 0.04 + Math.sin(t * 2 + i) * 0.02;
@@ -244,14 +248,8 @@ function ChartSparkles() {
         id = requestAnimationFrame(draw);
       };
       draw();
+    }, 500);
 
-      return () => {
-        cancelAnimationFrame(id);
-        window.removeEventListener('resize', resize);
-      };
-    };
-
-    const timer = setTimeout(start, 300);
     return () => {
       clearTimeout(timer);
       if (id) cancelAnimationFrame(id);
@@ -274,26 +272,20 @@ function RadialChart({ size = 160 }: { size?: number }) {
         const pct = cat.value / total;
         const angle = (offset / total) * 360;
         const endAngle = ((offset + cat.value) / total) * 360;
-
         const startRad = ((angle - 90) * Math.PI) / 180;
         const endRad = ((endAngle - 90) * Math.PI) / 180;
-
         const x1 = cx + r * Math.cos(startRad);
         const y1 = cy + r * Math.sin(startRad);
         const x2 = cx + r * Math.cos(endRad);
         const y2 = cy + r * Math.sin(endRad);
-
         const largeArc = pct > 0.5 ? 1 : 0;
 
         return (
-          <motion.path
+          <path
             key={cat.label}
             d={`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`}
-            fill="none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: idx * 0.15, duration: 0.5 }}
-            style={{ fill: `var(--color-${cat.bg.replace('bg-', '')})` }}
+            fill={`var(--color-${cat.bg.replace('bg-', '')})`}
+            style={{ animation: `fadeIn 0.5s ${0.15 * idx}s both` }}
           />
         );
       })}
@@ -314,41 +306,34 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
   const Icon = ach.icon;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 0.35 + idx * 0.04, duration: 0.3 }}
+    <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      whileHover={{ scale: 1.04, y: -2 }}
       className={`relative rounded-xl p-4 border text-center transition-all duration-300 cursor-default ${
         unlocked
           ? 'bg-gradient-to-br from-amber-500/5 to-orange-500/5 border-amber-500/20'
           : 'bg-surface-2 border-border-1'
       }`}
-      style={{ transformStyle: 'preserve-3d' }}
+      style={{
+        animation: `scaleInItem 0.3s ${0.35 + idx * 0.04}s both`,
+        transformStyle: 'preserve-3d',
+      }}
     >
       {unlocked && hovered && (
-        <motion.div
+        <div
           className="absolute inset-0 rounded-xl pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           style={{
             boxShadow: '0 0 40px rgba(251, 191, 36, 0.12), inset 0 0 40px rgba(251, 191, 36, 0.04)',
           }}
         />
       )}
-      <motion.div
-        animate={
-          unlocked && hovered ? { scale: 1.15, rotate: [0, -5, 5, 0] } : { scale: 1, rotate: 0 }
-        }
-        transition={{ type: 'spring', stiffness: 300, damping: 12 }}
-        className={`w-10 h-10 rounded-xl mx-auto mb-2.5 flex items-center justify-center ${
+      <div
+        className={`w-10 h-10 rounded-xl mx-auto mb-2.5 flex items-center justify-center transition-transform duration-300 ${
           unlocked ? 'bg-amber-500/10' : 'bg-surface-3'
-        }`}
+        } ${hovered && unlocked ? 'scale-115 rotate-6' : ''}`}
       >
         <Icon className={`w-5 h-5 ${unlocked ? ach.color : 'text-muted'}`} />
-      </motion.div>
+      </div>
       <h4
         className={`text-xs font-black uppercase tracking-wider ${unlocked ? 'text-soft-white' : 'text-muted'}`}
       >
@@ -356,44 +341,20 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
       </h4>
       <p className="text-[9px] font-medium text-subtle mt-0.5">{ach.desc}</p>
       <div className="mt-3 h-1.5 bg-surface-3 rounded-full overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${ach.progress}%` }}
-          transition={{
-            delay: 0.3 + idx * 0.04,
-            duration: 1,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
+        <div
           className={`h-full rounded-full ${unlocked ? 'bg-amber-400' : 'bg-accent/50'}`}
+          style={{ animation: `progressGrow 1s ${0.3 + idx * 0.04}s ease-out both` }}
         />
       </div>
       {unlocked && (
-        <motion.span
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: hovered ? 1.1 : 1 }}
+        <span
           className="text-[9px] font-black text-amber-400 uppercase tracking-widest mt-1.5 block text-glow-amber"
+          style={{ animation: `fadeIn 0.3s ${0.3 + idx * 0.04}s both` }}
         >
           Unlocked
-        </motion.span>
+        </span>
       )}
-    </motion.div>
-  );
-}
-
-function TimelineDot({ idx }: { idx: number }) {
-  return (
-    <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ delay: 0.3 + idx * 0.1, type: 'spring', stiffness: 200, damping: 12 }}
-      className="relative z-10 w-5 h-5 rounded-full bg-accent/20 border-2 border-accent/40 flex items-center justify-center flex-shrink-0"
-    >
-      <motion.div
-        animate={{ scale: [1, 1.3, 1] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: idx * 0.3 }}
-        className="w-2 h-2 rounded-full bg-accent-light"
-      />
-    </motion.div>
+    </div>
   );
 }
 
@@ -411,11 +372,11 @@ export default function ProfileClient() {
     if (!canvas) return;
     let id: number;
 
-    const startCanvas = () => {
+    const timer = setTimeout(() => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       let t = 0;
-      let skip = false;
+      let frame = 0;
 
       const resize = () => {
         canvas.width = canvas.offsetWidth;
@@ -425,49 +386,42 @@ export default function ProfileClient() {
       window.addEventListener('resize', resize);
 
       const draw = () => {
-        skip = !skip;
-        if (skip) {
+        frame++;
+        if (frame % 2 !== 0) {
           id = requestAnimationFrame(draw);
           return;
         }
-
         t += 0.002;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const w = canvas.width;
         const h = canvas.height;
 
-        for (let i = 0; i < 3; i++) {
-          const x = w * (0.15 + i * 0.35) + Math.sin(t * 0.3 + i * 2) * 40;
-          const y = h * (0.2 + i * 0.3) + Math.cos(t * 0.25 + i * 1.5) * 30;
-          const r = 200 + Math.sin(t * 0.15 + i) * 30;
+        for (let i = 0; i < 2; i++) {
+          const x = w * (0.2 + i * 0.5) + Math.sin(t * 0.3 + i * 2) * 40;
+          const y = h * (0.25 + i * 0.35) + Math.cos(t * 0.25 + i * 1.5) * 30;
+          const r = 180 + Math.sin(t * 0.15 + i) * 25;
           const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-          grad.addColorStop(0, `rgba(99, 102, 241, ${0.08 - i * 0.02})`);
-          grad.addColorStop(0.5, `rgba(139, 92, 246, ${0.04 - i * 0.01})`);
+          grad.addColorStop(0, `rgba(99, 102, 241, ${0.06 - i * 0.01})`);
+          grad.addColorStop(0.5, `rgba(139, 92, 246, ${0.03 - i * 0.005})`);
           grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, w, h);
         }
 
-        for (let i = 0; i < 3; i++) {
-          const fx = (t * 25 + i * 100) % w;
-          const fy = 30 + Math.sin(t + i * 2) * 12;
+        for (let i = 0; i < 2; i++) {
+          const fx = (t * 25 + i * 120) % w;
+          const fy = 30 + Math.sin(t + i * 2) * 10;
           ctx.beginPath();
           ctx.arc(fx, fy, 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(99, 102, 241, ${0.05 + Math.sin(t + i) * 0.02})`;
+          ctx.fillStyle = `rgba(99, 102, 241, ${0.04 + Math.sin(t + i) * 0.015})`;
           ctx.fill();
         }
 
         id = requestAnimationFrame(draw);
       };
       draw();
+    }, 200);
 
-      return () => {
-        cancelAnimationFrame(id);
-        window.removeEventListener('resize', resize);
-      };
-    };
-
-    const timer = setTimeout(startCanvas, 150);
     return () => {
       clearTimeout(timer);
       if (id) cancelAnimationFrame(id);
@@ -478,11 +432,9 @@ export default function ProfileClient() {
     <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Hero Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+        <div
           className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-deep-2 via-deep-2 to-deep-3 border border-border-1 min-h-[200px] group"
+          style={{ animation: 'fadeSlideUp 0.7s 0s ease-out both' }}
         >
           <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
           <GrainOverlay opacity={0.025} />
@@ -491,22 +443,18 @@ export default function ProfileClient() {
           <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6 p-6 md:p-8">
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 15 }}
+            <div
               className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-accent/30 to-purple-500/20 border border-accent/20 flex items-center justify-center flex-shrink-0"
+              style={{ animation: 'scaleIn 0.5s 0.1s ease-out both' }}
             >
               <span className="text-3xl md:text-4xl font-bold text-accent-light">{initials}</span>
-            </motion.div>
+            </div>
 
             <div className="flex-1 text-center md:text-left">
-              <motion.h1
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15, duration: 0.5 }}
+              <h1
                 className="text-4xl sm:text-5xl md:text-6xl font-black text-soft-white leading-[1.05] tracking-tight"
                 style={{
+                  animation: 'fadeSlideUp 0.5s 0.15s ease-out both',
                   WebkitTextStroke: '1.5px rgba(129, 140, 248, 0.15)',
                   textShadow:
                     '0 0 60px rgba(99, 102, 241, 0.1), 0 0 120px rgba(99, 102, 241, 0.05)',
@@ -515,28 +463,23 @@ export default function ProfileClient() {
                 <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">
                   <TypewriterText text={name} delay={0.2} />
                 </span>
-              </motion.h1>
+              </h1>
 
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.25, duration: 0.4 }}
+              <p
                 className="text-base text-muted mt-1 tracking-wide"
+                style={{ animation: 'fadeIn 0.4s 0.25s ease-out both' }}
               >
                 {user?.email || 'learner@example.com'}
-              </motion.p>
+              </p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.4 }}
+              <div
                 className="flex items-center justify-center md:justify-start gap-4 mt-3"
+                style={{ animation: 'fadeSlideUp 0.4s 0.3s ease-out both' }}
               >
                 <div className="flex items-center gap-1.5">
-                  <motion.span
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  <span
                     className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+                    style={{ animation: 'pulse 2s ease-in-out infinite' }}
                   />
                   <span className="text-xs font-semibold text-emerald-400/90 uppercase tracking-[0.2em] text-glow-emerald">
                     Active
@@ -545,31 +488,26 @@ export default function ProfileClient() {
                 <span className="text-xs text-subtle font-medium tracking-wide">
                   Member since {joinDate}
                 </span>
-              </motion.div>
+              </div>
             </div>
 
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.35 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
               className="px-4 py-2 rounded-lg bg-accent/10 border border-accent/20 text-accent-light text-sm font-semibold hover:bg-accent/20 transition-all"
+              style={{ animation: 'fadeIn 0.4s 0.35s ease-out both' }}
             >
               Edit Profile
-            </motion.button>
+            </button>
           </div>
 
-          <motion.div
+          <div
             className="absolute inset-0 rounded-2xl pointer-events-none"
-            animate={{ opacity: [0.3, 0.7, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             style={{
+              animation: 'fadeIn 1s 0s ease-out both',
               boxShadow:
                 'inset 0 0 0 1px rgba(99, 102, 241, 0.15), 0 0 40px rgba(99, 102, 241, 0.05)',
             }}
           />
-        </motion.div>
+        </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -578,18 +516,9 @@ export default function ProfileClient() {
             return (
               <div
                 key={stat.label}
-                className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-4 overflow-hidden group cursor-default animate-in"
+                className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-4 overflow-hidden group cursor-default hover:scale-104 hover:-translate-y-1 transition-all duration-200"
                 style={{
-                  animation: `fadeSlideUp 0.4s ease-out ${0.1 + idx * 0.04}s both`,
-                  willChange: 'transform, opacity',
-                }}
-                onMouseEnter={(e) => {
-                  const card = e.currentTarget;
-                  card.style.transform = 'scale(1.04) translateY(-3px)';
-                }}
-                onMouseLeave={(e) => {
-                  const card = e.currentTarget;
-                  card.style.transform = '';
+                  animation: `fadeSlideUp 0.4s ${0.1 + idx * 0.04}s ease-out both`,
                 }}
               >
                 <GrainOverlay opacity={0.03} />
@@ -603,6 +532,7 @@ export default function ProfileClient() {
                   prefix={stat.prefix || ''}
                   className={`text-2xl md:text-3xl font-black ${stat.color} text-glow-accent`}
                   duration={1.2}
+                  delay={0.1 + idx * 0.06}
                 />
                 <div className="text-xs font-semibold text-subtle uppercase tracking-wider mt-0.5">
                   {stat.label}
@@ -615,12 +545,9 @@ export default function ProfileClient() {
         {/* Skills & Weekly Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Skills */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+          <div
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+            style={{ animation: 'fadeSlideUp 0.5s 0.2s ease-out both' }}
           >
             <GrainOverlay opacity={0.03} />
             <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-glow-accent">
@@ -629,37 +556,26 @@ export default function ProfileClient() {
             </h3>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill, idx) => (
-                <motion.span
+                <span
                   key={skill}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.25 + idx * 0.03, duration: 0.3 }}
-                  whileHover={{ scale: 1.08, y: -1 }}
-                  className="px-3 py-1.5 rounded-lg bg-accent/10 border border-accent/15 text-xs font-bold text-accent-light uppercase tracking-wide cursor-default text-glow-accent"
+                  className="px-3 py-1.5 rounded-lg bg-accent/10 border border-accent/15 text-xs font-bold text-accent-light uppercase tracking-wide cursor-default text-glow-accent hover:scale-108 hover:-translate-y-0.5 transition-all duration-200"
+                  style={{ animation: `scaleInItem 0.3s ${0.25 + idx * 0.03}s ease-out both` }}
                 >
                   {skill}
-                </motion.span>
+                </span>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Weekly Activity */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ delay: 0.25, duration: 0.5 }}
+          <div
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden group"
+            style={{ animation: 'fadeSlideUp 0.5s 0.25s ease-out both' }}
           >
             <GrainOverlay opacity={0.03} />
             <ChartSparkles />
             <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
-              <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <IconActivity className="w-4 h-4" />
-              </motion.div>
+              <IconActivity className="w-4 h-4" />
               Weekly Activity
             </h3>
             <div className="flex items-end justify-between gap-2 h-32">
@@ -670,28 +586,22 @@ export default function ProfileClient() {
                     key={d.day}
                     className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
                   >
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3 + idx * 0.05 }}
+                    <span
                       className="text-[10px] font-black text-accent-light text-glow-accent"
+                      style={{ animation: `fadeIn 0.3s ${0.3 + idx * 0.05}s ease-out both` }}
                     >
                       {d.hours}h
-                    </motion.span>
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: `${h}%` }}
-                      transition={{
-                        delay: 0.3 + idx * 0.05,
-                        duration: 0.8,
-                        ease: [0.25, 0.1, 0.25, 1],
+                    </span>
+                    <div
+                      className="w-full rounded-t-md bg-gradient-to-t from-accent to-accent-light relative cursor-pointer hover:scale-108 transition-all duration-200"
+                      style={{
+                        minHeight: 4,
+                        height: `${h}%`,
+                        animation: `fadeSlideUp 0.8s ${0.3 + idx * 0.05}s ease-out both`,
                       }}
-                      className="w-full rounded-t-md bg-gradient-to-t from-accent to-accent-light relative cursor-pointer"
-                      style={{ minHeight: 4 }}
-                      whileHover={{ scale: 1.08, transformOrigin: 'bottom' }}
                     >
-                      <motion.div className="absolute inset-0 rounded-t-md bg-gradient-to-t from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                    </motion.div>
+                      <div className="absolute inset-0 rounded-t-md bg-gradient-to-t from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    </div>
                     <span className="text-[10px] font-bold text-subtle uppercase tracking-wider">
                       {d.day}
                     </span>
@@ -699,11 +609,9 @@ export default function ProfileClient() {
                 );
               })}
             </div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
+            <div
               className="mt-4 pt-3 border-t border-border-1 grid grid-cols-3 gap-2"
+              style={{ animation: 'fadeIn 0.4s 0.5s ease-out both' }}
             >
               {[
                 {
@@ -729,19 +637,16 @@ export default function ProfileClient() {
                   </div>
                 </div>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
 
         {/* Learning Distribution & Goals */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Learning Distribution */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+          <div
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+            style={{ animation: 'fadeSlideUp 0.5s 0.3s ease-out both' }}
           >
             <GrainOverlay opacity={0.03} />
             <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
@@ -753,19 +658,13 @@ export default function ProfileClient() {
             </div>
             <div className="space-y-3">
               {categoryData.map((cat, idx) => (
-                <motion.div
+                <div
                   key={cat.label}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + idx * 0.1, duration: 0.4 }}
+                  style={{ animation: `slideInLeft 0.4s ${0.3 + idx * 0.1}s ease-out both` }}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2">
-                      <motion.span
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                        className={`w-2 h-2 rounded-full ${cat.bg}`}
-                      />
+                      <span className={`w-2 h-2 rounded-full ${cat.bg}`} />
                       <span className="text-[11px] font-bold text-muted uppercase tracking-wider">
                         {cat.label}
                       </span>
@@ -773,31 +672,22 @@ export default function ProfileClient() {
                     <span className="text-[11px] font-black text-soft-white">{cat.value}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-3 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${cat.value}%` }}
-                      transition={{
-                        delay: 0.3 + idx * 0.1,
-                        duration: 1,
-                        ease: [0.25, 0.1, 0.25, 1],
-                      }}
+                    <div
                       className={`h-full rounded-full ${cat.bg} relative`}
+                      style={{ animation: `progressGrow 1s ${0.3 + idx * 0.1}s ease-out both` }}
                     >
                       <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                    </motion.div>
+                    </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Learning Goals */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ delay: 0.35, duration: 0.5 }}
+          <div
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+            style={{ animation: 'fadeSlideUp 0.5s 0.35s ease-out both' }}
           >
             <GrainOverlay opacity={0.03} />
             <div className="absolute -top-20 -right-20 w-60 h-60 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
@@ -809,23 +699,16 @@ export default function ProfileClient() {
               {learningGoals.map((goal, idx) => {
                 const GoalIcon = goal.icon;
                 return (
-                  <motion.div
+                  <div
                     key={goal.label}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 + idx * 0.1, duration: 0.4 }}
-                    whileHover={{ x: 3 }}
-                    className="group/goal"
+                    className="group/goal hover:translate-x-0.5 transition-transform duration-200"
+                    style={{ animation: `fadeSlideUp 0.4s ${0.3 + idx * 0.1}s ease-out both` }}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2.5">
-                        <motion.div
-                          whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-                          transition={{ type: 'spring', stiffness: 400, damping: 12 }}
-                          className="w-8 h-8 rounded-lg bg-surface-2 border border-border-1 flex items-center justify-center"
-                        >
+                        <div className="w-8 h-8 rounded-lg bg-surface-2 border border-border-1 flex items-center justify-center transition-transform duration-200 group-hover:scale-115 group-hover:rotate-6">
                           <GoalIcon className={`w-4 h-4 ${goal.color}`} />
-                        </motion.div>
+                        </div>
                         <span className="text-xs font-bold text-soft-white uppercase tracking-wide">
                           {goal.label}
                         </span>
@@ -835,75 +718,55 @@ export default function ProfileClient() {
                       </span>
                     </div>
                     <div className="h-2 bg-surface-3 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${goal.progress}%` }}
-                        transition={{
-                          delay: 0.3 + idx * 0.1,
-                          duration: 1.2,
-                          ease: [0.25, 0.1, 0.25, 1],
-                        }}
-                        className="h-full rounded-full relative"
+                      <div
+                        className="h-full rounded-full relative overflow-hidden"
                         style={{
-                          background: `linear-gradient(90deg, rgba(99,102,241,0.6), rgba(129,140,248,1))`,
+                          width: `${goal.progress}%`,
+                          background:
+                            'linear-gradient(90deg, rgba(99,102,241,0.6), rgba(129,140,248,1))',
+                          animation: `progressGrow 1.2s ${0.3 + idx * 0.1}s ease-out both`,
                         }}
                       >
-                        <motion.div
+                        <div
                           className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                          animate={{ x: ['-100%', '100%'] }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                            delay: idx * 0.2,
-                          }}
+                          style={{ animation: 'shimmer 2s ease-in-out infinite' }}
                         />
-                      </motion.div>
+                      </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Achievements */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ delay: 0.4, duration: 0.5 }}
+        <div
           className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+          style={{ animation: 'fadeSlideUp 0.5s 0.4s ease-out both' }}
         >
           <GrainOverlay opacity={0.03} />
           <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
           <h3 className="text-xs font-bold text-amber-400 uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-amber">
             <IconAward className="w-4 h-4" />
             Achievements
-            <motion.span
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="ml-auto text-[9px] font-black text-accent-light uppercase tracking-widest bg-accent/15 px-2.5 py-0.5 rounded-full border border-accent/20 text-glow-accent"
-            >
+            <span className="ml-auto text-[9px] font-black text-accent-light uppercase tracking-widest bg-accent/15 px-2.5 py-0.5 rounded-full border border-accent/20 text-glow-accent">
               {achievements.filter((a) => a.progress >= 100).length}/{achievements.length}
-            </motion.span>
+            </span>
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
             {achievements.map((ach, idx) => (
               <AchievementCard key={ach.name} ach={ach} idx={idx} />
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Recent Activity & Learning Journey */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Recent Activity */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ delay: 0.45, duration: 0.5 }}
+          <div
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+            style={{ animation: 'fadeSlideUp 0.5s 0.45s ease-out both' }}
           >
             <GrainOverlay opacity={0.03} />
             <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-glow-accent">
@@ -914,40 +777,30 @@ export default function ProfileClient() {
               {recentActivity.map((act, idx) => {
                 const ActIcon = act.icon;
                 return (
-                  <motion.div
+                  <div
                     key={act.action}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + idx * 0.05, duration: 0.3 }}
-                    whileHover={{ scale: 1.005, x: 3 }}
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface-2/50 transition-all cursor-default"
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface-2/50 hover:translate-x-1 transition-all duration-200 cursor-default"
+                    style={{ animation: `slideInLeft 0.3s ${0.3 + idx * 0.05}s ease-out both` }}
                   >
-                    <motion.div
-                      whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 12 }}
-                      className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5"
-                    >
+                    <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5 transition-transform duration-200 hover:scale-115 hover:rotate-6">
                       <ActIcon className="w-4 h-4 text-accent-light" />
-                    </motion.div>
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-soft-white truncate">{act.action}</p>
                       <p className="text-[10px] font-semibold text-subtle mt-0.5 tracking-wide">
                         {act.course} &middot; {act.time}
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
-          </motion.div>
+          </div>
 
           {/* Learning Journey Timeline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+          <div
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
+            style={{ animation: 'fadeSlideUp 0.5s 0.5s ease-out both' }}
           >
             <GrainOverlay opacity={0.03} />
             <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
@@ -956,28 +809,29 @@ export default function ProfileClient() {
             </h3>
             <div className="relative">
               {/* Vertical line */}
-              <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: '100%' }}
-                transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+              <div
                 className="absolute left-[9px] top-1 w-0.5 bg-gradient-to-b from-accent/40 via-accent/20 to-transparent"
+                style={{ animation: 'verticalGrow 0.8s 0.3s ease-out both' }}
               />
               <div className="space-y-6">
                 {milestones.map((m, idx) => {
                   const MIcon = m.icon;
                   return (
-                    <motion.div
+                    <div
                       key={m.title}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + idx * 0.12, duration: 0.4 }}
                       className="flex items-start gap-4 relative"
+                      style={{ animation: `slideInLeft 0.4s ${0.3 + idx * 0.12}s ease-out both` }}
                     >
-                      <TimelineDot idx={idx} />
-                      <motion.div
-                        whileHover={{ scale: 1.02, x: 3 }}
-                        className="flex-1 bg-surface-2/50 rounded-lg p-3 border border-border-1 hover:bg-surface-2/80 transition-all"
+                      <div
+                        className="relative z-10 w-5 h-5 rounded-full bg-accent/20 border-2 border-accent/40 flex items-center justify-center flex-shrink-0"
+                        style={{ animation: `scaleIn 0.4s ${0.3 + idx * 0.1}s ease-out both` }}
                       >
+                        <div
+                          className="w-2 h-2 rounded-full bg-accent-light"
+                          style={{ animation: 'pulse 2s ease-in-out infinite' }}
+                        />
+                      </div>
+                      <div className="flex-1 bg-surface-2/50 rounded-lg p-3 border border-border-1 hover:bg-surface-2/80 hover:scale-102 transition-all duration-200">
                         <div className="flex items-center gap-2 mb-0.5">
                           <MIcon className="w-3.5 h-3.5 text-accent-light" />
                           <span className="text-xs font-bold text-soft-white tracking-tight">
@@ -992,13 +846,13 @@ export default function ProfileClient() {
                             {m.subtitle}
                           </span>
                         </div>
-                      </motion.div>
-                    </motion.div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
