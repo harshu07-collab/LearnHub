@@ -22,7 +22,7 @@ A premium, futuristic learning dashboard built with **Next.js 16**, **Tailwind C
 - **Server-rendered data**: Course data fetched via RSC from Supabase
 - **Framer Motion animations**: Staggered entrance, spring hovers, `layoutId` nav indicator
 - **Grain texture**: Subtle noise overlay on all bento tiles
-- **Custom SVG logo**: Hand-crafted geometric mark (not AI-generated)
+- **Custom SVG logo**: Abstract geometric mark with overlapping wings + center spine
 - **Zero layout shifts**: All animations use `transform` and `opacity` only
 - **Responsive**: Desktop sidebar, tablet icon-only, mobile bottom nav
 
@@ -135,7 +135,7 @@ npm start          # Start production server
 - **Tailwind v4**: No `tailwind.config.js` — all tokens in `globals.css` via `@theme` directive.
 - **Supabase anon key**: Used for both client auth and server data fetching (with RLS). Service role key avoided due to table permission constraints.
 - **Fallback data**: If Supabase is unreachable, course data renders from hardcoded defaults to prevent blank screen.
-- **Custom logo**: Abstract geometric mark with two overlapping wings + center spine — represents continuous learning. Not an AI-generated icon.
+- **Custom logo**: Abstract geometric mark with two overlapping wings + center spine — represents continuous learning
 
 ## Challenges Faced
 

@@ -1,6 +1,6 @@
 'use client';
 
-// Hand-crafted geometric icons — unique to LearnHub, no AI generation
+// Custom SVG icons for LearnHub
 
 export function IconCode({ className = 'w-5 h-5' }: { className?: string }) {
   return (
