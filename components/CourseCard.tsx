@@ -158,7 +158,7 @@ export default function CourseCard({
             })}
           </motion.div>
           <h3
-            className="font-semibold text-base text-soft-white leading-snug flex-1 pt-1"
+            className="font-black text-base text-soft-white leading-snug tracking-tight flex-1 pt-1"
             style={{ transform: 'translateZ(24px)' }}
           >
             {title}

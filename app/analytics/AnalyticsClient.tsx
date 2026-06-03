@@ -410,7 +410,14 @@ export default function AnalyticsClient() {
               <IconBarChart className="w-5 h-5 text-accent-light" />
             </motion.div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Analytics</h1>
+              <h1
+                className="text-3xl md:text-4xl font-black text-soft-white leading-[1.05] tracking-tight text-glow-accent"
+                style={{ WebkitTextStroke: '1.5px rgba(129, 140, 248, 0.15)' }}
+              >
+                <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">
+                  Analytics
+                </span>
+              </h1>
               <p className="text-base text-muted mt-1">Your learning journey at a glance</p>
             </div>
           </div>
@@ -431,12 +438,12 @@ export default function AnalyticsClient() {
           >
             <GrainOverlay opacity={0.03} />
             <ChartSparkles />
-            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <IconClock className="w-4 h-4 text-accent-light" />
+                <IconClock className="w-4 h-4" />
               </motion.div>
               Weekly Study Time
             </h3>
@@ -488,8 +495,8 @@ export default function AnalyticsClient() {
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
             <GrainOverlay opacity={0.03} />
-            <h3 className="text-base font-semibold text-soft-white mb-5 flex items-center gap-2">
-              <IconTarget className="w-4 h-4 text-accent-light" />
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
+              <IconTarget className="w-4 h-4" />
               Learning Distribution
             </h3>
             <div className="flex items-center justify-center mb-6">
@@ -541,8 +548,8 @@ export default function AnalyticsClient() {
           className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
         >
           <GrainOverlay opacity={0.03} />
-          <h3 className="text-base font-semibold text-soft-white mb-5 flex items-center gap-2">
-            <IconAward className="w-4 h-4 text-amber-400" />
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-amber">
+            <IconAward className="w-4 h-4" />
             Achievements
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

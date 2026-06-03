@@ -49,7 +49,14 @@ export default function SettingsClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Settings</h1>
+        <h1
+          className="text-3xl md:text-4xl font-black text-soft-white leading-[1.05] tracking-tight text-glow-accent"
+          style={{ WebkitTextStroke: '1.5px rgba(129, 140, 248, 0.15)' }}
+        >
+          <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">
+            Settings
+          </span>
+        </h1>
         <p className="text-base text-muted mt-1">Manage your account and preferences</p>
       </motion.div>
 
@@ -96,8 +103,8 @@ export default function SettingsClient() {
 
             {activeSection === 'profile' && (
               <div className="relative z-10 space-y-5">
-                <h2 className="text-base font-semibold text-soft-white flex items-center gap-2">
-                  <User className="w-4 h-4 text-accent-light" />
+                <h2 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] flex items-center gap-2 text-glow-accent">
+                  <User className="w-4 h-4" />
                   Profile
                 </h2>
                 <div className="space-y-4">
@@ -137,8 +144,8 @@ export default function SettingsClient() {
 
             {activeSection === 'appearance' && (
               <div className="relative z-10 space-y-5">
-                <h2 className="text-base font-semibold text-soft-white flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-accent-light" />
+                <h2 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] flex items-center gap-2 text-glow-accent">
+                  <Palette className="w-4 h-4" />
                   Appearance
                 </h2>
                 <div className="space-y-4">
@@ -178,8 +185,8 @@ export default function SettingsClient() {
 
             {activeSection === 'notifications' && (
               <div className="relative z-10 space-y-5">
-                <h2 className="text-base font-semibold text-soft-white flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-accent-light" />
+                <h2 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] flex items-center gap-2 text-glow-accent">
+                  <Bell className="w-4 h-4" />
                   Notifications
                 </h2>
                 <div className="space-y-3">
@@ -216,8 +223,8 @@ export default function SettingsClient() {
 
             {activeSection === 'accessibility' && (
               <div className="relative z-10 space-y-5">
-                <h2 className="text-base font-semibold text-soft-white flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-accent-light" />
+                <h2 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] flex items-center gap-2 text-glow-accent">
+                  <Eye className="w-4 h-4" />
                   Accessibility
                 </h2>
                 <div className="space-y-3">
@@ -243,7 +250,7 @@ export default function SettingsClient() {
 
             {activeSection === 'danger' && (
               <div className="relative z-10 space-y-5">
-                <h2 className="text-base font-semibold text-red-400 flex items-center gap-2">
+                <h2 className="text-xs font-bold text-red-400 uppercase tracking-[0.2em] flex items-center gap-2 text-glow-accent">
                   <Shield className="w-4 h-4" />
                   Danger Zone
                 </h2>

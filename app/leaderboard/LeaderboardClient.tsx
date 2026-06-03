@@ -286,7 +286,14 @@ export default function LeaderboardPageClient() {
               <IconLeaderboard className="w-5 h-5 text-accent-light" />
             </motion.div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Leaderboard</h1>
+              <h1
+                className="text-3xl md:text-4xl font-black text-soft-white leading-[1.05] tracking-tight text-glow-accent"
+                style={{ WebkitTextStroke: '1.5px rgba(129, 140, 248, 0.15)' }}
+              >
+                <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">
+                  Leaderboard
+                </span>
+              </h1>
               <p className="text-base text-muted mt-1">Top learners this month</p>
             </div>
           </div>

@@ -57,7 +57,8 @@ export default function HeroTile({ userName: propName }: HeroTileProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-soft-white mb-2 leading-[1.05] tracking-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-soft-white mb-2 leading-[1.05] tracking-tight text-glow-accent"
+            style={{ WebkitTextStroke: '1.5px rgba(129, 140, 248, 0.12)' }}
           >
             Welcome back,{' '}
             <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">

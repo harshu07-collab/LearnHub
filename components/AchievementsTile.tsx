@@ -135,7 +135,9 @@ export default function AchievementsTile() {
             <IconTrophy className="w-4 h-4 text-amber-400" />
           </motion.div>
           <div>
-            <h3 className="text-base font-semibold text-soft-white">Achievements</h3>
+            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-[0.2em] text-glow-amber">
+              Achievements
+            </h3>
             <p className="text-base text-subtle">Your recent milestones</p>
           </div>
         </div>
@@ -183,7 +185,7 @@ export default function AchievementsTile() {
                   <Icon className={`w-[18px] h-[18px] ${unlocked ? ach.color : 'text-muted'}`} />
                 </motion.div>
                 <h4
-                  className={`text-base font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
+                  className={`text-xs font-black uppercase tracking-wider ${unlocked ? 'text-soft-white' : 'text-muted'}`}
                 >
                   {ach.name}
                 </h4>
@@ -211,7 +213,7 @@ export default function AchievementsTile() {
                       scale: hovered === idx ? [1, 1.1, 1] : 1,
                     }}
                     transition={{ delay: 0.1, duration: 0.3 }}
-                    className="text-[9px] text-amber-400 font-medium mt-1.5 block"
+                    className="text-[9px] font-black text-amber-400 uppercase tracking-widest mt-1.5 block text-glow-amber"
                   >
                     ★ Unlocked
                   </motion.span>

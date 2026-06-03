@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import {
   IconTrophy,
   IconFlame,
@@ -211,40 +211,50 @@ function ChartSparkles() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
     let id: number;
-    let t = 0;
 
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    const start = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      let t = 0;
+
+      const resize = () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      const draw = () => {
+        t += 0.005;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const w = canvas.width;
+        const h = canvas.height;
+
+        for (let i = 0; i < 4; i++) {
+          const x = (t * 15 + i * 90) % w;
+          const y = 30 + Math.sin(t + i * 1.7) * 15;
+          const a = 0.04 + Math.sin(t * 2 + i) * 0.02;
+          ctx.beginPath();
+          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(99, 102, 241, ${a})`;
+          ctx.fill();
+        }
+
+        id = requestAnimationFrame(draw);
+      };
+      draw();
+
+      return () => {
+        cancelAnimationFrame(id);
+        window.removeEventListener('resize', resize);
+      };
     };
-    resize();
-    window.addEventListener('resize', resize);
 
-    const draw = () => {
-      t += 0.005;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const w = canvas.width;
-      const h = canvas.height;
-
-      for (let i = 0; i < 4; i++) {
-        const x = (t * 15 + i * 90) % w;
-        const y = 30 + Math.sin(t + i * 1.7) * 15;
-        const a = 0.04 + Math.sin(t * 2 + i) * 0.02;
-        ctx.beginPath();
-        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(99, 102, 241, ${a})`;
-        ctx.fill();
-      }
-
-      id = requestAnimationFrame(draw);
-    };
-    draw();
+    const timer = setTimeout(start, 300);
     return () => {
-      cancelAnimationFrame(id);
-      window.removeEventListener('resize', resize);
+      clearTimeout(timer);
+      if (id) cancelAnimationFrame(id);
     };
   }, []);
 
@@ -252,14 +262,12 @@ function ChartSparkles() {
 }
 
 function RadialChart({ size = 160 }: { size?: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-50px' });
   const cx = size / 2;
   const cy = size / 2;
   const r = size * 0.35;
 
   return (
-    <svg ref={ref} width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       {categoryData.map((cat, idx) => {
         const total = categoryData.reduce((s, c) => s + c.value, 0);
         const offset = categoryData.slice(0, idx).reduce((s, c) => s + c.value, 0);
@@ -283,35 +291,19 @@ function RadialChart({ size = 160 }: { size?: number }) {
             d={`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`}
             fill="none"
             initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
+            animate={{ opacity: 1 }}
             transition={{ delay: idx * 0.15, duration: 0.5 }}
             style={{ fill: `var(--color-${cat.bg.replace('bg-', '')})` }}
           />
         );
       })}
       <circle cx={cx} cy={cy} r={r * 0.6} fill="var(--color-surface-1)" />
-      <motion.text
-        x={cx}
-        y={cy - 4}
-        textAnchor="middle"
-        className="text-soft-white text-xl font-bold"
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 0.5 }}
-      >
+      <text x={cx} y={cy - 4} textAnchor="middle" className="text-soft-white text-xl font-bold">
         100%
-      </motion.text>
-      <motion.text
-        x={cx}
-        y={cy + 12}
-        textAnchor="middle"
-        className="text-muted text-[9px]"
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ duration: 0.5 }}
-      >
+      </text>
+      <text x={cx} y={cy + 12} textAnchor="middle" className="text-muted text-[9px]">
         Total
-      </motion.text>
+      </text>
     </svg>
   );
 }
@@ -610,7 +602,8 @@ export default function ProfileClient() {
           {/* Skills */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: 0.2, duration: 0.5 }}
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
@@ -638,7 +631,8 @@ export default function ProfileClient() {
           {/* Weekly Activity */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: 0.25, duration: 0.5 }}
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden group"
           >
@@ -729,7 +723,8 @@ export default function ProfileClient() {
           {/* Learning Distribution */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: 0.3, duration: 0.5 }}
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
@@ -784,7 +779,8 @@ export default function ProfileClient() {
           {/* Learning Goals */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: 0.35, duration: 0.5 }}
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
@@ -859,7 +855,8 @@ export default function ProfileClient() {
         {/* Achievements */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
           transition={{ delay: 0.4, duration: 0.5 }}
           className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
         >
@@ -888,7 +885,8 @@ export default function ProfileClient() {
           {/* Recent Activity */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: 0.45, duration: 0.5 }}
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
@@ -931,7 +929,8 @@ export default function ProfileClient() {
           {/* Learning Journey Timeline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: 0.5, duration: 0.5 }}
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >

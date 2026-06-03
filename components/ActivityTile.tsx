@@ -129,7 +129,9 @@ export default function ActivityTile() {
               <IconActivity className="w-4 h-4 text-accent-light" />
             </motion.div>
             <div>
-              <h3 className="text-base font-semibold text-soft-white">Weekly Activity</h3>
+              <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] text-glow-accent">
+                Weekly Activity
+              </h3>
               <p className="text-base text-subtle">Your learning streak</p>
             </div>
           </div>

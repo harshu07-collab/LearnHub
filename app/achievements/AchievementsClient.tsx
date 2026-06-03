@@ -182,7 +182,14 @@ export default function AchievementsPageClient() {
               <IconAward className="w-5 h-5 text-amber-400" />
             </motion.div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Achievements</h1>
+              <h1
+                className="text-3xl md:text-4xl font-black text-soft-white leading-[1.05] tracking-tight text-glow-amber"
+                style={{ WebkitTextStroke: '1.5px rgba(251, 191, 36, 0.15)' }}
+              >
+                <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-orange-300 bg-clip-text text-transparent">
+                  Achievements
+                </span>
+              </h1>
               <p className="text-base text-muted mt-1">Your learning milestones and badges</p>
             </div>
           </div>
@@ -324,7 +331,7 @@ export default function AchievementsPageClient() {
                     </motion.div>
 
                     <h4
-                      className={`text-base font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}
+                      className={`text-xs font-black uppercase tracking-wider ${unlocked ? 'text-soft-white' : 'text-muted'}`}
                     >
                       {ach.name}
                     </h4>
@@ -349,7 +356,7 @@ export default function AchievementsPageClient() {
                       <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: isHovered ? 1.1 : 1 }}
-                        className="text-base text-amber-400 font-semibold mt-2 block"
+                        className="text-[9px] font-black text-amber-400 uppercase tracking-widest mt-2 block text-glow-amber"
                       >
                         Unlocked
                       </motion.span>

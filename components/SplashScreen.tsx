@@ -184,7 +184,12 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
           transition={{ duration: 0.5, delay: 0.7 }}
           className="text-center"
         >
-          <h1 className="text-4xl font-bold text-white tracking-tight">LearnHub</h1>
+          <h1
+            className="text-4xl font-black text-white tracking-tight text-glow-accent"
+            style={{ WebkitTextStroke: '1px rgba(129, 140, 248, 0.15)' }}
+          >
+            LearnHub
+          </h1>
           <p className="text-base text-white/40 mt-1 tracking-[0.2em] uppercase">
             Next-Gen Learning
           </p>

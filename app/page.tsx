@@ -17,7 +17,7 @@ export default async function Home() {
           <GridItem cols={2}>
             <section className="h-full">
               <div className="flex items-center justify-between mb-4 px-1">
-                <h2 className="text-base font-medium text-muted tracking-wide uppercase">
+                <h2 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] text-glow-accent">
                   Active Courses
                 </h2>
                 <span className="text-sm text-subtle">8 enrolled</span>

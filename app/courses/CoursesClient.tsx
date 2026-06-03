@@ -79,7 +79,14 @@ export default function CoursesClient({ initialCourses }: { initialCourses: Cour
         className="flex flex-col md:flex-row md:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-soft-white">Courses</h1>
+          <h1
+            className="text-3xl md:text-4xl font-black text-soft-white leading-[1.05] tracking-tight text-glow-accent"
+            style={{ WebkitTextStroke: '1.5px rgba(129, 140, 248, 0.15)' }}
+          >
+            <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">
+              Courses
+            </span>
+          </h1>
           <p className="text-base text-muted mt-1">Explore your learning path</p>
         </div>
         <div className="flex items-center gap-2">

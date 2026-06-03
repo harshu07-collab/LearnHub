@@ -61,7 +61,9 @@ export default function LoginPage() {
           <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
             <CheckCircle className="w-8 h-8 text-emerald-400" />
           </div>
-          <h2 className="text-2xl font-bold text-soft-white mb-2">Check your email</h2>
+          <h2 className="text-2xl font-black text-soft-white mb-2 tracking-tight">
+            Check your email
+          </h2>
           <p className="text-base text-muted mb-6 leading-relaxed">
             We sent a verification link to <strong className="text-soft-white">{email}</strong>.
             Click the link to activate your account.
