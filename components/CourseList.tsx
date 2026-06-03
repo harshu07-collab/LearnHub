@@ -1,19 +1,14 @@
 'use client';
 
 import CourseCard from './CourseCard';
-
-interface Course {
-  id: string;
-  title: string;
-  icon_name?: string;
-  progress?: number;
-}
+import type { Course } from '@/types';
 
 interface CourseListProps {
   courses: Course[];
+  isOffline?: boolean;
 }
 
-export default function CourseList({ courses }: CourseListProps) {
+export default function CourseList({ courses, isOffline }: CourseListProps) {
   if (!courses || courses.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4 rounded-xl bg-surface-1 border border-border-1">
@@ -37,17 +32,34 @@ export default function CourseList({ courses }: CourseListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-      {courses.map((course, idx) => (
-        <CourseCard
-          key={course.id}
-          id={course.id}
-          title={course.title}
-          icon_name={course.icon_name}
-          progress={course.progress}
-          index={idx}
-        />
-      ))}
+    <div className="space-y-3">
+      {isOffline && (
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
+            <path
+              d="M8 1L15 14H1L8 1Z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path d="M8 6V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="8" cy="11.5" r="0.75" fill="currentColor" />
+          </svg>
+          <span>Showing offline data — database connection unavailable.</span>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {courses.map((course, idx) => (
+          <CourseCard
+            key={course.id}
+            id={course.id}
+            title={course.title}
+            icon_name={course.icon_name}
+            progress={course.progress}
+            index={idx}
+          />
+        ))}
+      </div>
     </div>
   );
 }

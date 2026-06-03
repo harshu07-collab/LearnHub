@@ -13,16 +13,17 @@ const fallbackCourses = [
   { id: '8', title: 'DevOps & CI/CD Pipelines', icon_name: 'Cloud', progress: 15 },
 ];
 
-async function getCourses() {
+async function getCourses(): Promise<{ courses: typeof fallbackCourses; isOffline: boolean }> {
   try {
-    return await fetchCourses();
+    const courses = await fetchCourses();
+    return { courses, isOffline: false };
   } catch (e) {
     console.error('Failed to fetch courses from Supabase, using fallback:', e);
-    return fallbackCourses;
+    return { courses: fallbackCourses, isOffline: true };
   }
 }
 
 export default async function CourseListServer() {
-  const courses = await getCourses();
-  return <CourseList courses={courses} />;
+  const { courses, isOffline } = await getCourses();
+  return <CourseList courses={courses} isOffline={isOffline} />;
 }

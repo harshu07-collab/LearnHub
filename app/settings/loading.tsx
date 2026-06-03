@@ -1,0 +1,42 @@
+export default function SettingsLoading() {
+  return (
+    <div className="p-4 md:p-6 lg:p-8 pb-28 lg:pb-8 min-h-full">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header skeleton */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl skeleton-shimmer" />
+          <div className="space-y-2">
+            <div className="h-8 w-32 skeleton-shimmer rounded-lg" />
+            <div className="h-4 w-52 skeleton-shimmer rounded-md" />
+          </div>
+        </div>
+        {/* Settings sections skeleton */}
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-xl bg-deep-2 border border-border-1 p-5 md:p-6 contain-layout"
+          >
+            <div className="h-4 w-28 skeleton-shimmer rounded-md mb-5" />
+            <div className="space-y-4">
+              {Array.from({ length: 3 }).map((_, j) => (
+                <div
+                  key={j}
+                  className="flex items-center justify-between p-3 rounded-xl bg-surface-2/50 border border-border-1"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg skeleton-shimmer" />
+                    <div className="space-y-1.5">
+                      <div className="h-4 w-32 skeleton-shimmer rounded-md" />
+                      <div className="h-3 w-44 skeleton-shimmer rounded-md" />
+                    </div>
+                  </div>
+                  <div className="w-11 h-6 skeleton-shimmer rounded-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

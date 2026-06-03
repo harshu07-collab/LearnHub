@@ -5,13 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Grid3X3, List, ArrowRight, Bookmark, Clock, TrendingUp } from 'lucide-react';
 import { getIcon } from '@/lib/icon-utils';
 import GrainOverlay from '@/components/GrainOverlay';
-
-interface Course {
-  id: string;
-  title: string;
-  icon_name?: string;
-  progress?: number;
-}
+import type { Course } from '@/types';
 
 const categories = ['All', 'Frontend', 'AI/ML', 'Cloud', 'Design'];
 
