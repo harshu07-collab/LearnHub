@@ -357,10 +357,12 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
       >
         <Icon className={`w-5 h-5 ${unlocked ? ach.color : 'text-muted'}`} />
       </motion.div>
-      <h4 className={`text-sm font-semibold ${unlocked ? 'text-soft-white' : 'text-muted'}`}>
+      <h4
+        className={`text-xs font-black uppercase tracking-wider ${unlocked ? 'text-soft-white' : 'text-muted'}`}
+      >
         {ach.name}
       </h4>
-      <p className="text-[10px] text-subtle mt-0.5">{ach.desc}</p>
+      <p className="text-[9px] font-medium text-subtle mt-0.5">{ach.desc}</p>
       <div className="mt-3 h-1.5 bg-surface-3 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
@@ -377,7 +379,7 @@ function AchievementCard({ ach, idx }: { ach: (typeof achievements)[0]; idx: num
         <motion.span
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: hovered ? 1.1 : 1 }}
-          className="text-[10px] text-amber-400 font-medium mt-1.5 block"
+          className="text-[9px] font-black text-amber-400 uppercase tracking-widest mt-1.5 block text-glow-amber"
         >
           Unlocked
         </motion.span>
@@ -502,16 +504,23 @@ export default function ProfileClient() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15, duration: 0.5 }}
-                className="text-3xl md:text-4xl font-bold text-soft-white"
+                className="text-4xl sm:text-5xl md:text-6xl font-black text-soft-white leading-[1.05] tracking-tight"
+                style={{
+                  WebkitTextStroke: '1.5px rgba(129, 140, 248, 0.15)',
+                  textShadow:
+                    '0 0 60px rgba(99, 102, 241, 0.1), 0 0 120px rgba(99, 102, 241, 0.05)',
+                }}
               >
-                <TypewriterText text={name} delay={0.2} />
+                <span className="bg-gradient-to-r from-accent-light via-accent-lighter to-purple-300 bg-clip-text text-transparent">
+                  <TypewriterText text={name} delay={0.2} />
+                </span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25, duration: 0.4 }}
-                className="text-sm text-muted mt-1"
+                className="text-base text-muted mt-1 tracking-wide"
               >
                 {user?.email || 'learner@example.com'}
               </motion.p>
@@ -528,11 +537,13 @@ export default function ProfileClient() {
                     transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                     className="w-1.5 h-1.5 rounded-full bg-emerald-400"
                   />
-                  <span className="text-sm text-emerald-400/80 font-medium uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-emerald-400/90 uppercase tracking-[0.2em] text-glow-emerald">
                     Active
                   </span>
                 </div>
-                <span className="text-sm text-subtle">Member since {joinDate}</span>
+                <span className="text-xs text-subtle font-medium tracking-wide">
+                  Member since {joinDate}
+                </span>
               </motion.div>
             </div>
 
@@ -583,10 +594,12 @@ export default function ProfileClient() {
                 <AnimatedCounter
                   to={stat.value}
                   prefix={stat.prefix || ''}
-                  className="text-2xl font-bold text-soft-white"
+                  className={`text-2xl md:text-3xl font-black ${stat.color} text-glow-accent`}
                   duration={1.2}
                 />
-                <div className="text-sm text-subtle mt-0.5">{stat.label}</div>
+                <div className="text-xs font-semibold text-subtle uppercase tracking-wider mt-0.5">
+                  {stat.label}
+                </div>
               </motion.div>
             );
           })}
@@ -602,8 +615,8 @@ export default function ProfileClient() {
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
             <GrainOverlay opacity={0.03} />
-            <h3 className="text-sm font-semibold text-soft-white mb-4 flex items-center gap-2">
-              <IconZap className="w-4 h-4 text-accent-light" />
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-glow-accent">
+              <IconZap className="w-4 h-4" />
               Skills & Interests
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -614,7 +627,7 @@ export default function ProfileClient() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.25 + idx * 0.03, duration: 0.3 }}
                   whileHover={{ scale: 1.08, y: -1 }}
-                  className="px-3 py-1.5 rounded-lg bg-accent/8 border border-accent/10 text-sm font-medium text-accent-light cursor-default"
+                  className="px-3 py-1.5 rounded-lg bg-accent/10 border border-accent/15 text-xs font-bold text-accent-light uppercase tracking-wide cursor-default text-glow-accent"
                 >
                   {skill}
                 </motion.span>
@@ -631,12 +644,12 @@ export default function ProfileClient() {
           >
             <GrainOverlay opacity={0.03} />
             <ChartSparkles />
-            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <IconActivity className="w-4 h-4 text-accent-light" />
+                <IconActivity className="w-4 h-4" />
               </motion.div>
               Weekly Activity
             </h3>
@@ -652,7 +665,7 @@ export default function ProfileClient() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 + idx * 0.05 }}
-                      className="text-xs text-accent-light font-medium"
+                      className="text-[10px] font-black text-accent-light text-glow-accent"
                     >
                       {d.hours}h
                     </motion.span>
@@ -670,7 +683,9 @@ export default function ProfileClient() {
                     >
                       <motion.div className="absolute inset-0 rounded-t-md bg-gradient-to-t from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                     </motion.div>
-                    <span className="text-xs text-subtle font-medium">{d.day}</span>
+                    <span className="text-[10px] font-bold text-subtle uppercase tracking-wider">
+                      {d.day}
+                    </span>
                   </div>
                 );
               })}
@@ -682,13 +697,27 @@ export default function ProfileClient() {
               className="mt-4 pt-3 border-t border-border-1 grid grid-cols-3 gap-2"
             >
               {[
-                { label: 'Total', value: '22.8h', color: 'text-accent-light' },
-                { label: 'Avg', value: '3.3h', color: 'text-purple-400' },
-                { label: 'Peak', value: '5.5h', color: 'text-emerald-400' },
+                {
+                  label: 'Total',
+                  value: '22.8h',
+                  color: 'text-accent-light',
+                  glow: 'text-glow-accent',
+                },
+                { label: 'Avg', value: '3.3h', color: 'text-purple-400', glow: 'text-glow-accent' },
+                {
+                  label: 'Peak',
+                  value: '5.5h',
+                  color: 'text-emerald-400',
+                  glow: 'text-glow-emerald',
+                },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <span className={`text-lg font-bold ${stat.color}`}>{stat.value}</span>
-                  <div className="text-[10px] text-subtle mt-0.5">{stat.label}</div>
+                  <span className={`text-xl font-black ${stat.color} ${stat.glow}`}>
+                    {stat.value}
+                  </span>
+                  <div className="text-[9px] font-bold text-subtle uppercase tracking-widest mt-0.5">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </motion.div>
@@ -705,8 +734,8 @@ export default function ProfileClient() {
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
             <GrainOverlay opacity={0.03} />
-            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-              <IconBarChart className="w-4 h-4 text-accent-light" />
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
+              <IconBarChart className="w-4 h-4" />
               Learning Distribution
             </h3>
             <div className="flex items-center justify-center mb-6">
@@ -727,9 +756,11 @@ export default function ProfileClient() {
                         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                         className={`w-2 h-2 rounded-full ${cat.bg}`}
                       />
-                      <span className="text-xs text-muted">{cat.label}</span>
+                      <span className="text-[11px] font-bold text-muted uppercase tracking-wider">
+                        {cat.label}
+                      </span>
                     </div>
-                    <span className="text-xs font-semibold text-soft-white">{cat.value}%</span>
+                    <span className="text-[11px] font-black text-soft-white">{cat.value}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-3 rounded-full overflow-hidden">
                     <motion.div
@@ -759,8 +790,8 @@ export default function ProfileClient() {
           >
             <GrainOverlay opacity={0.03} />
             <div className="absolute -top-20 -right-20 w-60 h-60 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
-            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-              <IconTarget className="w-4 h-4 text-accent-light" />
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
+              <IconTarget className="w-4 h-4" />
               Learning Goals
             </h3>
             <div className="space-y-5">
@@ -784,9 +815,13 @@ export default function ProfileClient() {
                         >
                           <GoalIcon className={`w-4 h-4 ${goal.color}`} />
                         </motion.div>
-                        <span className="text-sm font-medium text-soft-white">{goal.label}</span>
+                        <span className="text-xs font-bold text-soft-white uppercase tracking-wide">
+                          {goal.label}
+                        </span>
                       </div>
-                      <span className="text-xs font-bold text-soft-white">{goal.progress}%</span>
+                      <span className="text-sm font-black text-accent-light text-glow-accent">
+                        {goal.progress}%
+                      </span>
                     </div>
                     <div className="h-2 bg-surface-3 rounded-full overflow-hidden">
                       <motion.div
@@ -830,13 +865,13 @@ export default function ProfileClient() {
         >
           <GrainOverlay opacity={0.03} />
           <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-          <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-            <IconAward className="w-4 h-4 text-amber-400" />
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-amber">
+            <IconAward className="w-4 h-4" />
             Achievements
             <motion.span
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="ml-auto text-[10px] font-medium text-accent-light bg-accent/10 px-2 py-0.5 rounded-full border border-accent/10"
+              className="ml-auto text-[9px] font-black text-accent-light uppercase tracking-widest bg-accent/15 px-2.5 py-0.5 rounded-full border border-accent/20 text-glow-accent"
             >
               {achievements.filter((a) => a.progress >= 100).length}/{achievements.length}
             </motion.span>
@@ -858,8 +893,8 @@ export default function ProfileClient() {
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
             <GrainOverlay opacity={0.03} />
-            <h3 className="text-sm font-semibold text-soft-white mb-4 flex items-center gap-2">
-              <IconClock className="w-4 h-4 text-accent-light" />
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-glow-accent">
+              <IconClock className="w-4 h-4" />
               Recent Activity
             </h3>
             <div className="space-y-1">
@@ -882,8 +917,8 @@ export default function ProfileClient() {
                       <ActIcon className="w-4 h-4 text-accent-light" />
                     </motion.div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-soft-white truncate">{act.action}</p>
-                      <p className="text-xs text-subtle mt-0.5">
+                      <p className="text-sm font-bold text-soft-white truncate">{act.action}</p>
+                      <p className="text-[10px] font-semibold text-subtle mt-0.5 tracking-wide">
                         {act.course} &middot; {act.time}
                       </p>
                     </div>
@@ -901,8 +936,8 @@ export default function ProfileClient() {
             className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 overflow-hidden"
           >
             <GrainOverlay opacity={0.03} />
-            <h3 className="text-sm font-semibold text-soft-white mb-5 flex items-center gap-2">
-              <IconRocket className="w-4 h-4 text-accent-light" />
+            <h3 className="text-xs font-bold text-accent-light uppercase tracking-[0.2em] mb-5 flex items-center gap-2 text-glow-accent">
+              <IconRocket className="w-4 h-4" />
               Learning Journey
             </h3>
             <div className="relative">
@@ -931,11 +966,17 @@ export default function ProfileClient() {
                       >
                         <div className="flex items-center gap-2 mb-0.5">
                           <MIcon className="w-3.5 h-3.5 text-accent-light" />
-                          <span className="text-xs font-medium text-soft-white">{m.title}</span>
+                          <span className="text-xs font-bold text-soft-white tracking-tight">
+                            {m.title}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-accent/60 font-mono">{m.year}</span>
-                          <span className="text-[10px] text-subtle">{m.subtitle}</span>
+                          <span className="text-[9px] font-bold text-accent/60 font-mono tracking-wider">
+                            {m.year}
+                          </span>
+                          <span className="text-[9px] font-medium text-subtle tracking-wide">
+                            {m.subtitle}
+                          </span>
                         </div>
                       </motion.div>
                     </motion.div>
