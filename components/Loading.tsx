@@ -1,17 +1,12 @@
 import React from 'react';
 
 function Pulse({ className = '', style }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <div
-      className={`rounded-lg bg-gradient-to-r from-surface-2 via-surface-3 to-surface-2 bg-[length:200%_100%] animate-pulse ${className}`}
-      style={style}
-    />
-  );
+  return <div className={`rounded-lg skeleton-shimmer ${className}`} style={style} />;
 }
 
 function CardSkeleton() {
   return (
-    <div className="rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 space-y-3">
+    <div className="rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 space-y-3 contain-layout">
       <div className="flex items-start gap-3">
         <Pulse className="w-9 h-9 rounded-lg flex-shrink-0" />
         <Pulse className="h-4 flex-1 mt-1.5" />
@@ -39,7 +34,7 @@ export function CourseListSkeleton() {
 
 export function ActivityTileSkeleton() {
   return (
-    <div className="rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 space-y-5">
+    <div className="rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-5 md:p-6 space-y-5 contain-layout">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <Pulse className="w-8 h-8 rounded-lg" />
@@ -69,7 +64,7 @@ export function ActivityTileSkeleton() {
 
 export function HeroTileSkeleton() {
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-6 md:p-8 min-h-[240px] md:min-h-[260px]">
+    <div className="rounded-2xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-6 md:p-8 min-h-[240px] md:min-h-[260px] contain-layout">
       <div className="space-y-3">
         <Pulse className="h-3 w-40" />
         <Pulse className="h-8 w-72 mt-4" />

@@ -67,9 +67,14 @@ export default function Sidebar() {
     <>
       <CursorGlow />
       <nav
-        className={`hidden md:flex flex-col h-full bg-deep-1 border-r border-border-1 transition-all duration-300 ease-out relative ${
+        className={`hidden md:flex flex-col h-full bg-deep-1 border-r border-border-1 relative ${
           resolvedCollapsed ? 'w-16' : 'w-56'
         }`}
+        style={{
+          transition: 'width 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
+          willChange: 'width',
+          contain: 'layout style',
+        }}
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-4 h-14 border-b border-border-1 flex-shrink-0">

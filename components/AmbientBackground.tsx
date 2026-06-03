@@ -13,6 +13,8 @@ export default function AmbientBackground() {
 
     let animationId: number;
     let time = 0;
+    let lastFrame = 0;
+    const FPS_INTERVAL = 1000 / 30; // Throttle to 30fps
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -28,7 +30,13 @@ export default function AmbientBackground() {
       { x: 0.1, y: 0.6, r: 250, color: '79, 70, 229', speed: 0.08 },
     ];
 
-    const draw = () => {
+    const draw = (now: number) => {
+      animationId = requestAnimationFrame(draw);
+
+      const delta = now - lastFrame;
+      if (delta < FPS_INTERVAL) return;
+      lastFrame = now - (delta % FPS_INTERVAL);
+
       time += 0.002;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -42,10 +50,8 @@ export default function AmbientBackground() {
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       });
-
-      animationId = requestAnimationFrame(draw);
     };
-    draw();
+    animationId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animationId);
@@ -56,8 +62,9 @@ export default function AmbientBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
+      className="fixed inset-0 pointer-events-none z-0 gpu-accelerated"
       style={{ opacity: 0.8 }}
+      aria-hidden="true"
     />
   );
 }

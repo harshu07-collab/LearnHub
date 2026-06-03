@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, createElement } from 'react';
+import { useRef, useState, useCallback, createElement } from 'react';
 import { motion } from 'framer-motion';
 import { getIcon } from '@/lib/icon-utils';
 import GrainOverlay from './GrainOverlay';
@@ -20,33 +20,43 @@ export default function CourseCard({
   index = 0,
 }: CourseCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
   const [iconShake, setIconShake] = useState(false);
-  const [spotlight, setSpotlight] = useState({ x: 50, y: 50 });
   const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
   const rippleId = useRef(0);
+  const rafId = useRef<number>(0);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  // Use CSS custom properties for mouse tracking (no re-renders)
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    setRotateX((y - centerY) / 20);
-    setRotateY((centerX - x) / 20);
-    setSpotlight({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 });
-  };
+    cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotX = (y - centerY) / 20;
+      const rotY = (centerX - x) / 20;
+      const spotX = (x / rect.width) * 100;
+      const spotY = (y / rect.height) * 100;
 
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-    setSpotlight({ x: 50, y: 50 });
+      cardRef.current.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      cardRef.current.style.setProperty('--spot-x', `${spotX}%`);
+      cardRef.current.style.setProperty('--spot-y', `${spotY}%`);
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    cancelAnimationFrame(rafId.current);
+    if (!cardRef.current) return;
+    cardRef.current.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg)';
+    cardRef.current.style.setProperty('--spot-x', '50%');
+    cardRef.current.style.setProperty('--spot-y', '50%');
     setIconShake(false);
-  };
+  }, []);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -54,12 +64,12 @@ export default function CourseCard({
     const id = rippleId.current++;
     setRipples((prev) => [...prev, { x, y, id }]);
     setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 600);
-  };
+  }, []);
 
-  const handleIconHover = () => {
+  const handleIconHover = useCallback(() => {
     setIconShake(true);
     setTimeout(() => setIconShake(false), 500);
-  };
+  }, []);
 
   return (
     <motion.div
@@ -81,8 +91,10 @@ export default function CourseCard({
       }}
       whileTap={{ scale: 0.99 }}
       style={{
-        transform: `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         transformStyle: 'preserve-3d',
+        willChange: 'transform',
+        ['--spot-x' as string]: '50%',
+        ['--spot-y' as string]: '50%',
       }}
       className="relative group rounded-xl bg-gradient-to-br from-surface-1 via-surface-2 to-deep-3 border border-border-1 p-5 overflow-hidden cursor-pointer transition-shadow duration-300"
     >
@@ -128,11 +140,12 @@ export default function CourseCard({
         }}
       />
 
-      {/* Real mouse-tracking spotlight */}
-      <motion.div
+      {/* Real mouse-tracking spotlight via CSS custom properties */}
+      <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, rgba(99,102,241,0.07) 0%, transparent 60%)`,
+          background:
+            'radial-gradient(circle at var(--spot-x) var(--spot-y), rgba(99,102,241,0.07) 0%, transparent 60%)',
         }}
       />
 

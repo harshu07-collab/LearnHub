@@ -1,39 +1,43 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function CursorGlow() {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [enabled] = useState(true);
+  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    const el = glowRef.current;
+    if (!el) return;
+
     let rafId: number;
     const handleMove = (e: MouseEvent) => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        setPos({ x: e.clientX, y: e.clientY });
+        el.style.left = `${e.clientX}px`;
+        el.style.top = `${e.clientY}px`;
       });
     };
-    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mousemove', handleMove, { passive: true });
     return () => {
       window.removeEventListener('mousemove', handleMove);
       cancelAnimationFrame(rafId);
     };
-  }, [enabled]);
-
-  if (!enabled) return null;
+  }, []);
 
   return (
     <div
-      className="fixed pointer-events-none z-50"
+      ref={glowRef}
+      className="fixed pointer-events-none z-50 gpu-accelerated"
+      aria-hidden="true"
       style={{
-        left: pos.x,
-        top: pos.y,
+        left: 0,
+        top: 0,
         width: 500,
         height: 500,
         transform: 'translate(-50%, -50%)',
-        transition: 'left 0.3s ease-out, top 0.3s ease-out',
+        transition:
+          'left 0.15s cubic-bezier(0.32, 0.72, 0, 1), top 0.15s cubic-bezier(0.32, 0.72, 0, 1)',
+        willChange: 'left, top',
       }}
     >
       <div

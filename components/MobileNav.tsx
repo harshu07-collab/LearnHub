@@ -45,7 +45,8 @@ export default function MobileNav() {
       initial={{ y: 60 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-      className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-deep-1/90 backdrop-blur-xl border-t border-border-1 z-50"
+      className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-deep-1/90 backdrop-blur-xl border-t border-border-1 z-50 gpu-accelerated"
+      style={{ contain: 'layout style' }}
     >
       <div className="flex items-center justify-around h-full px-2">
         {items.map((item, idx) => {

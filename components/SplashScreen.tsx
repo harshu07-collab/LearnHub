@@ -7,23 +7,23 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const [phase, setPhase] = useState<'enter' | 'exit'>('enter');
 
   useEffect(() => {
-    const timer = setTimeout(() => setPhase('exit'), 2000);
+    const timer = setTimeout(() => setPhase('exit'), 1400);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (phase === 'exit') {
-      const timer = setTimeout(onFinish, 500);
+      const timer = setTimeout(onFinish, 400);
       return () => clearTimeout(timer);
     }
   }, [phase, onFinish]);
 
   return (
     <motion.div
-      className="fixed inset-0 z-[200] bg-deep-0 flex items-center justify-center"
+      className="fixed inset-0 z-[200] bg-deep-0 flex items-center justify-center gpu-accelerated"
       initial={{ opacity: 1 }}
       animate={{ opacity: phase === 'exit' ? 0 : 1 }}
-      transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
     >
       {/* Ambient glow */}
       <motion.div

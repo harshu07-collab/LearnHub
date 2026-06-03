@@ -36,6 +36,8 @@ export default function ActivityTile() {
 
     let animationId: number;
     let t = 0;
+    let lastFrame = 0;
+    const FPS_INTERVAL = 1000 / 30;
 
     const resize = () => {
       canvas.width = canvas.offsetWidth;
@@ -44,7 +46,13 @@ export default function ActivityTile() {
     resize();
     window.addEventListener('resize', resize);
 
-    const draw = () => {
+    const draw = (now: number) => {
+      animationId = requestAnimationFrame(draw);
+
+      const delta = now - lastFrame;
+      if (delta < FPS_INTERVAL) return;
+      lastFrame = now - (delta % FPS_INTERVAL);
+
       t += 0.008;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const w = canvas.width;
@@ -81,10 +89,8 @@ export default function ActivityTile() {
         ctx.fillStyle = `rgba(99, 102, 241, ${0.06 + Math.sin(t + i) * 0.03})`;
         ctx.fill();
       }
-
-      animationId = requestAnimationFrame(draw);
     };
-    draw();
+    animationId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animationId);

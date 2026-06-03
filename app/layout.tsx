@@ -9,6 +9,7 @@ import AuthGuard from '@/components/AuthGuard';
 import CommandPalette from '@/components/CommandPalette';
 import PageTransition from '@/components/PageTransition';
 import { ToastProvider } from '@/components/Toast';
+import { GrainFilterDefs } from '@/components/GrainOverlay';
 
 const bricolage = Bricolage_Grotesque({
   variable: '--font-sans',
@@ -19,6 +20,7 @@ const bricolage = Bricolage_Grotesque({
 const geistMono = Geist_Mono({
   variable: '--font-mono',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -37,12 +39,13 @@ export default function RootLayout({
       <body className="h-screen flex flex-col bg-deep-0 text-soft-white overflow-hidden selection:bg-accent/30">
         <AuthGuard>
           <ToastProvider>
+            <GrainFilterDefs />
             <AmbientBackground />
             <FloatingParticles />
             <CommandPalette />
             <div className="flex flex-1 overflow-hidden relative z-10">
               <Sidebar />
-              <main className="flex-1 overflow-y-auto overflow-x-hidden">
+              <main className="flex-1 overflow-y-auto overflow-x-hidden smooth-scroll">
                 <PageTransition>{children}</PageTransition>
               </main>
             </div>

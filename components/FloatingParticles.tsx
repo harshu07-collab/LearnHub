@@ -20,8 +20,16 @@ export default function GridBackground() {
 
     let animId: number;
     let time = 0;
+    let lastFrame = 0;
+    const FPS_INTERVAL = 1000 / 30; // Throttle to 30fps
 
-    const draw = () => {
+    const draw = (now: number) => {
+      animId = requestAnimationFrame(draw);
+
+      const delta = now - lastFrame;
+      if (delta < FPS_INTERVAL) return;
+      lastFrame = now - (delta % FPS_INTERVAL);
+
       time += 0.002;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -37,14 +45,13 @@ export default function GridBackground() {
 
       ctx.lineWidth = 0.5;
 
-      // Horizontal lines — perfectly straight, no bending
+      // Horizontal lines
       for (let row = 0; row <= rows; row++) {
         const y = row * cellSize;
         const dy = Math.abs(y - cy);
         const intensity = 1 - Math.min(dy / cy, 1);
         const alpha = intensity * intensity * 0.3;
 
-        // Subtle pulse on center lines only
         const centerPulse = Math.max(0, 1 - dy / (cy * 0.4));
         const pulse = 1 + Math.sin(time * 0.5 + row * 0.3) * 0.15 * centerPulse;
 
@@ -55,7 +62,7 @@ export default function GridBackground() {
         ctx.stroke();
       }
 
-      // Vertical lines — perfectly straight, no bending
+      // Vertical lines
       for (let col = 0; col <= cols; col++) {
         const x = col * cellSize;
         const dx = Math.abs(x - cx);
@@ -71,10 +78,8 @@ export default function GridBackground() {
         ctx.lineTo(x, h);
         ctx.stroke();
       }
-
-      animId = requestAnimationFrame(draw);
     };
-    draw();
+    animId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animId);
@@ -82,5 +87,11 @@ export default function GridBackground() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0 gpu-accelerated"
+      aria-hidden="true"
+    />
+  );
 }

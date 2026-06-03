@@ -24,6 +24,16 @@
   --font-mono: var(--font-mono), "Fira Code", monospace;
 }
 
+/* Reduced motion: disable all transitions and animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer base {
   * {
     -webkit-font-smoothing: antialiased;
@@ -34,6 +44,7 @@
     height: 100%;
     color-scheme: dark;
     background-color: var(--color-deep-0);
+    scroll-behavior: smooth;
   }
 
   body {
@@ -45,6 +56,7 @@
     line-height: 1.7;
     min-height: 100vh;
     overflow-x: hidden;
+    text-rendering: optimizeLegibility;
   }
 
   ::selection {
@@ -62,9 +74,28 @@
   ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.08);
     border-radius: 3px;
+    transition: background 0.2s ease;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* GPU-promote animated containers */
+  .gpu-accelerated {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Prevent layout shift on animated elements */
+  .contain-layout {
+    contain: layout style;
+  }
+
+  /* Smooth overflow scrolling */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   :focus-visible {
@@ -132,6 +163,20 @@
   @keyframes shimmer {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
+  }
+  @keyframes skeleton-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.04) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
   }
   @keyframes countUp {
     from { width: 0; }
