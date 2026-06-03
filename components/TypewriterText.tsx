@@ -14,11 +14,11 @@ export default function TypewriterText({ text, className = '', delay = 0 }: Type
       {text.split('').map((char, idx) => (
         <motion.span
           key={idx}
-          initial={{ opacity: 0, filter: 'blur(4px)' }}
-          animate={{ opacity: 1, filter: 'blur(0px)' }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
             delay: delay + idx * 0.03,
-            duration: 0.3,
+            duration: 0.25,
             ease: [0.25, 0.1, 0.25, 1],
           }}
           className="inline-block"

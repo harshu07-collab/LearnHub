@@ -99,4 +99,14 @@
   .text-glow-emerald {
     text-shadow: 0 0 40px rgba(52, 211, 153, 0.15), 0 0 80px rgba(52, 211, 153, 0.05);
   }
+  .group-hover\:scale-115:hover {
+    transform: scale(1.15);
+  }
+  .group-hover\:rotate-6:hover {
+    transform: rotate(6deg);
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }

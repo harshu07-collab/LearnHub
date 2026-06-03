@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   IconTrophy,
@@ -409,59 +409,68 @@ export default function ProfileClient() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
     let id: number;
-    let t = 0;
 
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+    const startCanvas = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      let t = 0;
+      let skip = false;
+
+      const resize = () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      const draw = () => {
+        skip = !skip;
+        if (skip) {
+          id = requestAnimationFrame(draw);
+          return;
+        }
+
+        t += 0.002;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const w = canvas.width;
+        const h = canvas.height;
+
+        for (let i = 0; i < 3; i++) {
+          const x = w * (0.15 + i * 0.35) + Math.sin(t * 0.3 + i * 2) * 40;
+          const y = h * (0.2 + i * 0.3) + Math.cos(t * 0.25 + i * 1.5) * 30;
+          const r = 200 + Math.sin(t * 0.15 + i) * 30;
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+          grad.addColorStop(0, `rgba(99, 102, 241, ${0.08 - i * 0.02})`);
+          grad.addColorStop(0.5, `rgba(139, 92, 246, ${0.04 - i * 0.01})`);
+          grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        for (let i = 0; i < 3; i++) {
+          const fx = (t * 25 + i * 100) % w;
+          const fy = 30 + Math.sin(t + i * 2) * 12;
+          ctx.beginPath();
+          ctx.arc(fx, fy, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(99, 102, 241, ${0.05 + Math.sin(t + i) * 0.02})`;
+          ctx.fill();
+        }
+
+        id = requestAnimationFrame(draw);
+      };
+      draw();
+
+      return () => {
+        cancelAnimationFrame(id);
+        window.removeEventListener('resize', resize);
+      };
     };
-    resize();
-    window.addEventListener('resize', resize);
 
-    const draw = () => {
-      t += 0.002;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const w = canvas.width;
-      const h = canvas.height;
-
-      for (let i = 0; i < 3; i++) {
-        const x = w * (0.15 + i * 0.35) + Math.sin(t * 0.3 + i * 2) * 40;
-        const y = h * (0.2 + i * 0.3) + Math.cos(t * 0.25 + i * 1.5) * 30;
-        const r = 200 + Math.sin(t * 0.15 + i) * 30;
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-        grad.addColorStop(0, `rgba(99, 102, 241, ${0.08 - i * 0.02})`);
-        grad.addColorStop(0.5, `rgba(139, 92, 246, ${0.04 - i * 0.01})`);
-        grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
-      }
-
-      for (let i = 0; i < 3; i++) {
-        const fx = (t * 25 + i * 100) % w;
-        const fy = 30 + Math.sin(t + i * 2) * 12;
-        ctx.beginPath();
-        ctx.arc(fx, fy, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(99, 102, 241, ${0.05 + Math.sin(t + i) * 0.02})`;
-        ctx.fill();
-      }
-
-      const sx = ((t * 50) % (w + 200)) - 100;
-      const sg = ctx.createLinearGradient(sx, 0, sx + 150, 0);
-      sg.addColorStop(0, 'rgba(99, 102, 241, 0)');
-      sg.addColorStop(0.5, 'rgba(99, 102, 241, 0.03)');
-      sg.addColorStop(1, 'rgba(99, 102, 241, 0)');
-      ctx.fillStyle = sg;
-      ctx.fillRect(0, 0, w, h);
-
-      id = requestAnimationFrame(draw);
-    };
-    draw();
+    const timer = setTimeout(startCanvas, 150);
     return () => {
-      cancelAnimationFrame(id);
-      window.removeEventListener('resize', resize);
+      clearTimeout(timer);
+      if (id) cancelAnimationFrame(id);
     };
   }, []);
 
@@ -567,22 +576,28 @@ export default function ProfileClient() {
           {stats.map((stat, idx) => {
             const StatIcon = stat.icon;
             return (
-              <motion.div
+              <div
                 key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + idx * 0.04, duration: 0.4 }}
-                whileHover={{ scale: 1.04, y: -3 }}
-                className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-4 overflow-hidden group cursor-default"
+                className="relative rounded-xl bg-gradient-to-br from-surface-1 to-deep-3 border border-border-1 p-4 overflow-hidden group cursor-default animate-in"
+                style={{
+                  animation: `fadeSlideUp 0.4s ease-out ${0.1 + idx * 0.04}s both`,
+                  willChange: 'transform, opacity',
+                }}
+                onMouseEnter={(e) => {
+                  const card = e.currentTarget;
+                  card.style.transform = 'scale(1.04) translateY(-3px)';
+                }}
+                onMouseLeave={(e) => {
+                  const card = e.currentTarget;
+                  card.style.transform = '';
+                }}
               >
                 <GrainOverlay opacity={0.03} />
-                <motion.div
-                  whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 12 }}
-                  className={`w-8 h-8 rounded-lg ${stat.bg} border border-border-1 flex items-center justify-center mb-2.5`}
+                <div
+                  className={`w-8 h-8 rounded-lg ${stat.bg} border border-border-1 flex items-center justify-center mb-2.5 transition-transform duration-200 group-hover:scale-115 group-hover:rotate-6`}
                 >
                   <StatIcon className={`w-4 h-4 ${stat.color}`} />
-                </motion.div>
+                </div>
                 <AnimatedCounter
                   to={stat.value}
                   prefix={stat.prefix || ''}
@@ -592,7 +607,7 @@ export default function ProfileClient() {
                 <div className="text-xs font-semibold text-subtle uppercase tracking-wider mt-0.5">
                   {stat.label}
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
