@@ -2,10 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 import type { Course } from '@/types';
 const COURSES_TARGET = 8;
 
-// Server-side: use non-public env vars (never exposed to client bundle)
+// Server-side: use anon key for data fetching (RLS policies handle access control)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: { persistSession: false },
